@@ -13,7 +13,7 @@ param oaiLocation string = 'eastus'
 param location string
 
 @description('Name of App Service plan')
-param hostingPlanName string = 'host-teams-accelerator-canadacentral-001'
+param hostingPlanName string = 'host-teams-accelerator-dev-canadacentral-001'
 
 @description('The pricing tier for the App Service plan')
 @allowed([
@@ -45,16 +45,16 @@ param hostingPlanSku string = 'B3'
 param skuTier string = 'Basic'
 
 @description('Name of Web App')
-param websiteName string = 'as-teams-accelerator-canadacentral-001'
+param websiteName string = 'as-teams-accelerator-dev-canadacentral-001'
 
 @description('Name of Admin Web App')
-param adminWebsiteName string = 'ADMIN-as-teams-accelerator-canadacentral-001'
+param adminWebsiteName string = 'ADMIN-as-teams-accelerator-dev-canadacentral-001'
 
 @description('Name of Application Insights')
-param applicationInsightsName string = 'appi-teams-accelerator-canadacentral-001'
+param applicationInsightsName string = 'appi-teams-accelerator-dev-canadacentral-001'
 
 @description('Name of the Workbook')
-param workbookDisplayName string = 'wb-teams-accelerator-canadacentral-001'
+param workbookDisplayName string = 'wb-teams-accelerator-dev-canadacentral-001'
 
 @description('Use semantic search')
 param azureSearchUseSemanticSearch string = 'false'
@@ -93,7 +93,7 @@ param azureSearchUrlColumn string = 'url'
 param azureSearchUseIntegratedVectorization bool = false
 
 @description('Name of Azure OpenAI Resource')
-param azureOpenAIResourceName string = 'oai-teams-accelerator-canadacentral-001'
+param azureOpenAIResourceName string = 'oai-teams-accelerator-dev-canadacentral-001'
 
 @description('Name of Azure OpenAI Resource SKU')
 param azureOpenAISkuName string = 'S0'
@@ -113,7 +113,6 @@ param azureOpenAIModelCapacity int = 30
 param useAdvancedImageProcessing bool = false
 
 @description('Azure OpenAI Vision Model Deployment Name')
-
 param azureOpenAIVisionModel string = 'gpt-35-turbo-16k'
 
 @description('Azure OpenAI Vision Model Name')
@@ -163,7 +162,7 @@ param azureOpenAIEmbeddingModelName string = 'text-embedding-ada-002'
 param azureOpenAIEmbeddingModelCapacity int = 30
 
 @description('Name of Computer Vision Resource (if useAdvancedImageProcessing=true)')
-param computerVisionName string = 'cv-teams-accelerator-canadacentral-001'
+param computerVisionName string = 'cv-teams-accelerator-dev-canadacentral-001'
 
 @description('Name of Computer Vision Resource SKU (if useAdvancedImageProcessing=true)')
 @allowed([
@@ -173,7 +172,8 @@ param computerVisionName string = 'cv-teams-accelerator-canadacentral-001'
 param computerVisionSkuName string = 'S1'
 
 @description('Location of Computer Vision Resource (if useAdvancedImageProcessing=true)')
-@allowed([// List taken from https://learn.microsoft.com/en-us/azure/ai-services/computer-vision/how-to/image-retrieval?tabs=python#prerequisites
+@allowed([
+  // List taken from https://learn.microsoft.com/en-us/azure/ai-services/computer-vision/how-to/image-retrieval?tabs=python#prerequisites
   'eastus'
   'westus'
   'koreacentral'
@@ -186,7 +186,7 @@ param computerVisionSkuName string = 'S1'
 param computerVisionLocation string = useAdvancedImageProcessing ? location : ''
 
 @description('Azure AI Search Resource')
-param azureAISearchName string = 'srch-teams-accelerator-canadacentral-001'
+param azureAISearchName string = 'srch-teams-accelerator-dev-canadacentral-001'
 
 @description('The SKU of the search service you want to create. E.g. free or standard')
 @allowed([
@@ -199,7 +199,7 @@ param azureAISearchName string = 'srch-teams-accelerator-canadacentral-001'
 param azureSearchSku string = 'standard'
 
 @description('Azure AI Search Index')
-param azureSearchIndex string = 'idx-teams-accelerator-canadacentral-002'
+param azureSearchIndex string = 'idx-teams-accelerator-dev-canadacentral-002'
 
 @description('Azure AI Search Conversation Log Index')
 param azureSearchConversationLogIndex string = 'conversations'
@@ -208,19 +208,19 @@ param azureSearchConversationLogIndex string = 'conversations'
 param storageAccountName string = 'stteamsaccelerator'
 
 @description('Name of Function App for Batch document processing')
-param functionName string = 'func-teams-accelerator-canadacentral-001'
+param functionName string = 'func-teams-accelerator-dev-canadacentral-001'
 
 @description('Azure Form Recognizer Name')
-param formRecognizerName string = 'di-teams-accelerator-canadacentral-001'
+param formRecognizerName string = 'di-teams-accelerator-dev-canadacentral-001'
 
 @description('Azure Content Safety Name')
-param contentSafetyName string = 'cs-teams-accelerator-canadacentral-001'
+param contentSafetyName string = 'cs-teams-accelerator-dev-canadacentral-001'
 
 @description('Azure Speech Service Name')
-param speechServiceName string = 'spch-teams-accelerator-canadacentral-001'
+param speechServiceName string = 'spch-teams-accelerator-dev-canadacentral-001'
 
 @description('Log Analytics Name')
-param logAnalyticsName string = 'log-teams-accelerator-canadacentral-001'
+param logAnalyticsName string = 'log-teams-accelerator-dev-canadacentral-001'
 
 param newGuidString string = newGuid()
 param searchTag string = 'chatwithyourdata-sa'
@@ -264,7 +264,7 @@ var clientKey = '${uniqueString(guid(subscription().id, deployment().name))}${ne
 var eventGridSystemTopicName = 'doc-processing'
 var tags = { 'azd-env-name': environmentName }
 var rgName = 'rg-${environmentName}'
-var keyVaultName = 'kv-teams-accelerator-001'
+var keyVaultName = 'kv-accelerator-dev-001'
 
 // Organize resources in a resource group
 resource rg 'Microsoft.Resources/resourceGroups@2021-04-01' = {
@@ -1012,7 +1012,11 @@ output DOCUMENT_PROCESSING_QUEUE_NAME string = queueName
 output ORCHESTRATION_STRATEGY string = orchestrationStrategy
 output USE_KEY_VAULT bool = useKeyVault
 output AZURE_APP_SERVICE_HOSTING_MODEL string = hostingModel
-output FRONTEND_WEBSITE_NAME string = hostingModel == 'code' ? web.outputs.FRONTEND_API_URI : web_docker.outputs.FRONTEND_API_URI
-output ADMIN_WEBSITE_NAME string = hostingModel == 'code' ? adminweb.outputs.WEBSITE_ADMIN_URI : adminweb_docker.outputs.WEBSITE_ADMIN_URI
+output FRONTEND_WEBSITE_NAME string = hostingModel == 'code'
+  ? web.outputs.FRONTEND_API_URI
+  : web_docker.outputs.FRONTEND_API_URI
+output ADMIN_WEBSITE_NAME string = hostingModel == 'code'
+  ? adminweb.outputs.WEBSITE_ADMIN_URI
+  : adminweb_docker.outputs.WEBSITE_ADMIN_URI
 output SPEECH_RECOGNIZER_LANGUAGES string = recognizedLanguages
 output LOGLEVEL string = logLevel
