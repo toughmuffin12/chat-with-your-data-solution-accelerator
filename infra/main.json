@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.27.1.19265",
-      "templateHash": "11176276501454217988"
+      "templateHash": "8691175982492506105"
     }
   },
   "parameters": {
@@ -33,7 +33,7 @@
     },
     "hostingPlanName": {
       "type": "string",
-      "defaultValue": "host-teams-accelerator-dev-canadacentral-001",
+      "defaultValue": "host-dev-accelerator-canadacentral-001",
       "metadata": {
         "description": "Name of App Service plan"
       }
@@ -77,28 +77,28 @@
     },
     "websiteName": {
       "type": "string",
-      "defaultValue": "as-teams-accelerator-dev-canadacentral-001",
+      "defaultValue": "as-dev-accelerator-canadacentral-001",
       "metadata": {
         "description": "Name of Web App"
       }
     },
     "adminWebsiteName": {
       "type": "string",
-      "defaultValue": "ADMIN-as-teams-accelerator-dev-canadacentral-001",
+      "defaultValue": "ADMIN-as-dev-accelerator-canadacentral-001",
       "metadata": {
         "description": "Name of Admin Web App"
       }
     },
     "applicationInsightsName": {
       "type": "string",
-      "defaultValue": "appi-teams-accelerator-dev-canadacentral-001",
+      "defaultValue": "appi-dev-accelerator-canadacentral-001",
       "metadata": {
         "description": "Name of Application Insights"
       }
     },
     "workbookDisplayName": {
       "type": "string",
-      "defaultValue": "wb-teams-accelerator-dev-canadacentral-001",
+      "defaultValue": "wb-dev-accelerator-canadacentral-001",
       "metadata": {
         "description": "Name of the Workbook"
       }
@@ -185,7 +185,7 @@
     },
     "azureOpenAIResourceName": {
       "type": "string",
-      "defaultValue": "oai-teams-accelerator-dev-canadacentral-001",
+      "defaultValue": "oai-dev-accelerator-canadacentral-001",
       "metadata": {
         "description": "Name of Azure OpenAI Resource"
       }
@@ -340,7 +340,7 @@
     },
     "computerVisionName": {
       "type": "string",
-      "defaultValue": "cv-teams-accelerator-dev-canadacentral-001",
+      "defaultValue": "cv-dev-accelerator-canadacentral-001",
       "metadata": {
         "description": "Name of Computer Vision Resource (if useAdvancedImageProcessing=true)"
       }
@@ -375,7 +375,7 @@
     },
     "azureAISearchName": {
       "type": "string",
-      "defaultValue": "srch-teams-accelerator-dev-canadacentral-001",
+      "defaultValue": "srch-dev-accelerator-canadacentral-002",
       "metadata": {
         "description": "Azure AI Search Resource"
       }
@@ -396,7 +396,7 @@
     },
     "azureSearchIndex": {
       "type": "string",
-      "defaultValue": "idx-teams-accelerator-dev-canadacentral-002",
+      "defaultValue": "idx-dev-accelerator-canadacentral-001",
       "metadata": {
         "description": "Azure AI Search Index"
       }
@@ -410,42 +410,42 @@
     },
     "storageAccountName": {
       "type": "string",
-      "defaultValue": "stteamsaccelerator",
+      "defaultValue": "stdevaccelerator",
       "metadata": {
         "description": "Name of Storage Account"
       }
     },
     "functionName": {
       "type": "string",
-      "defaultValue": "func-teams-accelerator-dev-canadacentral-001",
+      "defaultValue": "func-dev-accelerator-canadacentral-001",
       "metadata": {
         "description": "Name of Function App for Batch document processing"
       }
     },
     "formRecognizerName": {
       "type": "string",
-      "defaultValue": "di-teams-accelerator-dev-canadacentral-001",
+      "defaultValue": "di-dev-accelerator-canadacentral-001",
       "metadata": {
         "description": "Azure Form Recognizer Name"
       }
     },
     "contentSafetyName": {
       "type": "string",
-      "defaultValue": "cs-teams-accelerator-dev-canadacentral-001",
+      "defaultValue": "cs-dev-accelerator-canadacentral-001",
       "metadata": {
         "description": "Azure Content Safety Name"
       }
     },
     "speechServiceName": {
       "type": "string",
-      "defaultValue": "spch-teams-accelerator-dev-canadacentral-001",
+      "defaultValue": "spch-dev-accelerator-canadacentral-001",
       "metadata": {
         "description": "Azure Speech Service Name"
       }
     },
     "logAnalyticsName": {
       "type": "string",
-      "defaultValue": "log-teams-accelerator-dev-canadacentral-001",
+      "defaultValue": "log-dev-accelerator-canadacentral-001",
       "metadata": {
         "description": "Log Analytics Name"
       }
@@ -522,7 +522,7 @@
       "azd-env-name": "[parameters('environmentName')]"
     },
     "rgName": "[format('rg-{0}', parameters('environmentName'))]",
-    "keyVaultName": "kv-accelerator-dev-001",
+    "keyVaultName": "kv-dev-accelerator-001",
     "defaultOpenAiDeployments": [
       {
         "name": "[parameters('azureOpenAIModel')]",
@@ -1442,7 +1442,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.27.1.19265",
-              "templateHash": "9132077633421805051"
+              "templateHash": "9972332331937244196"
             }
           },
           "parameters": {
@@ -1480,7 +1480,7 @@
             },
             "storageAccountKeyName": {
               "type": "securestring",
-              "defaultValue": ""
+              "defaultValue": "AZURE-STORAGE-ACCOUNT-KEY"
             },
             "openAIKeyName": {
               "type": "string",
