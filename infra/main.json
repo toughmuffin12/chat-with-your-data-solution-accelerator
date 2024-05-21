@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.27.1.19265",
-      "templateHash": "5491507486581236403"
+      "templateHash": "13784895981282523441"
     }
   },
   "parameters": {
@@ -231,9 +231,7 @@
     },
     "azureOpenAIVisionModel": {
       "type": "string",
-
       "defaultValue": "gpt-35-turbo-16k",
-
       "metadata": {
         "description": "Azure OpenAI Vision Model Deployment Name"
       }
@@ -1444,7 +1442,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.27.1.19265",
-              "templateHash": "6700778522040462677"
+              "templateHash": "9132077633421805051"
             }
           },
           "parameters": {
@@ -1481,8 +1479,8 @@
               "defaultValue": ""
             },
             "storageAccountKeyName": {
-              "type": "string",
-              "defaultValue": "AZURE-STORAGE-ACCOUNT-KEY"
+              "type": "securestring",
+              "defaultValue": ""
             },
             "openAIKeyName": {
               "type": "string",
