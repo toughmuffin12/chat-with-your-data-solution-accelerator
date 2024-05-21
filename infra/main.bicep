@@ -113,7 +113,6 @@ param azureOpenAIModelCapacity int = 30
 param useAdvancedImageProcessing bool = false
 
 @description('Azure OpenAI Vision Model Deployment Name')
-
 param azureOpenAIVisionModel string = 'gpt-35-turbo-16k'
 
 @description('Azure OpenAI Vision Model Name')
@@ -173,7 +172,8 @@ param computerVisionName string = 'cv-teams-accelerator-canadacentral-001'
 param computerVisionSkuName string = 'S1'
 
 @description('Location of Computer Vision Resource (if useAdvancedImageProcessing=true)')
-@allowed([// List taken from https://learn.microsoft.com/en-us/azure/ai-services/computer-vision/how-to/image-retrieval?tabs=python#prerequisites
+@allowed([
+  // List taken from https://learn.microsoft.com/en-us/azure/ai-services/computer-vision/how-to/image-retrieval?tabs=python#prerequisites
   'eastus'
   'westus'
   'koreacentral'
@@ -199,7 +199,7 @@ param azureAISearchName string = 'srch-teams-accelerator-canadacentral-001'
 param azureSearchSku string = 'standard'
 
 @description('Azure AI Search Index')
-param azureSearchIndex string = 'idx-teams-accelerator-canadacentral-002'
+param azureSearchIndex string = 'idx-teams-accelerator-canadacentral-001'
 
 @description('Azure AI Search Conversation Log Index')
 param azureSearchConversationLogIndex string = 'conversations'
@@ -1012,7 +1012,11 @@ output DOCUMENT_PROCESSING_QUEUE_NAME string = queueName
 output ORCHESTRATION_STRATEGY string = orchestrationStrategy
 output USE_KEY_VAULT bool = useKeyVault
 output AZURE_APP_SERVICE_HOSTING_MODEL string = hostingModel
-output FRONTEND_WEBSITE_NAME string = hostingModel == 'code' ? web.outputs.FRONTEND_API_URI : web_docker.outputs.FRONTEND_API_URI
-output ADMIN_WEBSITE_NAME string = hostingModel == 'code' ? adminweb.outputs.WEBSITE_ADMIN_URI : adminweb_docker.outputs.WEBSITE_ADMIN_URI
+output FRONTEND_WEBSITE_NAME string = hostingModel == 'code'
+  ? web.outputs.FRONTEND_API_URI
+  : web_docker.outputs.FRONTEND_API_URI
+output ADMIN_WEBSITE_NAME string = hostingModel == 'code'
+  ? adminweb.outputs.WEBSITE_ADMIN_URI
+  : adminweb_docker.outputs.WEBSITE_ADMIN_URI
 output SPEECH_RECOGNIZER_LANGUAGES string = recognizedLanguages
 output LOGLEVEL string = logLevel
