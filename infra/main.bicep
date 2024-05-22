@@ -474,7 +474,7 @@ module web './app/web.bicep' = if (hostingModel == 'code') {
   params: {
     name: websiteName
     location: location
-    tags: union(tags, { 'azd-service-name': 'web' })
+    tags: union(tags, { 'azd-service-name': 'web-dev' })
     runtimeName: 'python'
     runtimeVersion: '3.11'
     appServicePlanId: hostingplan.outputs.name
@@ -539,7 +539,7 @@ module web_docker './app/web.bicep' = if (hostingModel == 'container') {
   params: {
     name: '${websiteName}-docker'
     location: location
-    tags: union(tags, { 'azd-service-name': 'web-docker' })
+    tags: union(tags, { 'azd-service-name': 'web-docker-dev' })
     dockerFullImageName: 'fruoccopublic.azurecr.io/rag-webapp'
     appServicePlanId: hostingplan.outputs.name
     applicationInsightsName: monitoring.outputs.applicationInsightsName
@@ -603,7 +603,7 @@ module adminweb './app/adminweb.bicep' = if (hostingModel == 'code') {
   params: {
     name: adminWebsiteName
     location: location
-    tags: union(tags, { 'azd-service-name': 'adminweb' })
+    tags: union(tags, { 'azd-service-name': 'adminweb-dev' })
     runtimeName: 'python'
     runtimeVersion: '3.11'
     appServicePlanId: hostingplan.outputs.name
@@ -666,7 +666,7 @@ module adminweb_docker './app/adminweb.bicep' = if (hostingModel == 'container')
   params: {
     name: '${adminWebsiteName}-docker'
     location: location
-    tags: union(tags, { 'azd-service-name': 'adminweb-docker' })
+    tags: union(tags, { 'azd-service-name': 'adminweb-docker-dev' })
     dockerFullImageName: 'fruoccopublic.azurecr.io/rag-adminwebapp'
     appServicePlanId: hostingplan.outputs.name
     applicationInsightsName: monitoring.outputs.applicationInsightsName
@@ -762,7 +762,7 @@ module function './app/function.bicep' = if (hostingModel == 'code') {
   params: {
     name: functionName
     location: location
-    tags: union(tags, { 'azd-service-name': 'function' })
+    tags: union(tags, { 'azd-service-name': 'function-dev' })
     runtimeName: 'python'
     runtimeVersion: '3.11'
     appServicePlanId: hostingplan.outputs.name
@@ -807,7 +807,7 @@ module function_docker './app/function.bicep' = if (hostingModel == 'container')
   params: {
     name: '${functionName}-docker'
     location: location
-    tags: union(tags, { 'azd-service-name': 'function-docker' })
+    tags: union(tags, { 'azd-service-name': 'function-docker-dev' })
     dockerFullImageName: 'fruoccopublic.azurecr.io/rag-backend'
     appServicePlanId: hostingplan.outputs.name
     applicationInsightsName: monitoring.outputs.applicationInsightsName

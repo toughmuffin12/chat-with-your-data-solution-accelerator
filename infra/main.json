@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.27.1.19265",
-      "templateHash": "8691175982492506105"
+      "templateHash": "10954436900565483978"
     }
   },
   "parameters": {
@@ -1878,7 +1878,7 @@
             "value": "[parameters('location')]"
           },
           "tags": {
-            "value": "[union(variables('tags'), createObject('azd-service-name', 'web'))]"
+            "value": "[union(variables('tags'), createObject('azd-service-name', 'web-dev'))]"
           },
           "runtimeName": {
             "value": "python"
@@ -2747,7 +2747,7 @@
             "value": "[parameters('location')]"
           },
           "tags": {
-            "value": "[union(variables('tags'), createObject('azd-service-name', 'web-docker'))]"
+            "value": "[union(variables('tags'), createObject('azd-service-name', 'web-docker-dev'))]"
           },
           "dockerFullImageName": {
             "value": "fruoccopublic.azurecr.io/rag-webapp"
@@ -3613,7 +3613,7 @@
             "value": "[parameters('location')]"
           },
           "tags": {
-            "value": "[union(variables('tags'), createObject('azd-service-name', 'adminweb'))]"
+            "value": "[union(variables('tags'), createObject('azd-service-name', 'adminweb-dev'))]"
           },
           "runtimeName": {
             "value": "python"
@@ -4540,7 +4540,7 @@
             "value": "[parameters('location')]"
           },
           "tags": {
-            "value": "[union(variables('tags'), createObject('azd-service-name', 'adminweb-docker'))]"
+            "value": "[union(variables('tags'), createObject('azd-service-name', 'adminweb-docker-dev'))]"
           },
           "dockerFullImageName": {
             "value": "fruoccopublic.azurecr.io/rag-adminwebapp"
@@ -7197,7 +7197,7 @@
             "value": "[parameters('location')]"
           },
           "tags": {
-            "value": "[union(variables('tags'), createObject('azd-service-name', 'function'))]"
+            "value": "[union(variables('tags'), createObject('azd-service-name', 'function-dev'))]"
           },
           "runtimeName": {
             "value": "python"
@@ -8417,7 +8417,7 @@
             "value": "[parameters('location')]"
           },
           "tags": {
-            "value": "[union(variables('tags'), createObject('azd-service-name', 'function-docker'))]"
+            "value": "[union(variables('tags'), createObject('azd-service-name', 'function-docker-dev'))]"
           },
           "dockerFullImageName": {
             "value": "fruoccopublic.azurecr.io/rag-backend"
