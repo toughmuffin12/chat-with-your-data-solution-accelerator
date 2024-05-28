@@ -1,5 +1,4 @@
 import logging
-from uuid import uuid4
 from typing import List, Optional
 from abc import ABC, abstractmethod
 from ..loggers.conversation_logger import ConversationLogger
@@ -14,9 +13,9 @@ class OrchestratorBase(ABC):
     def __init__(self) -> None:
         super().__init__()
         self.config = ConfigHelper.get_active_config_or_default()
-        self.message_id = str(uuid4())
+        # self.id = ""
         self.tokens = {"prompt": 0, "completion": 0, "total": 0}
-        logger.debug(f"New message id: {self.message_id} with tokens {self.tokens}")
+        # logger.debug(f"New message id: {self.id} with tokens {self.tokens}")
         self.conversation_logger: ConversationLogger = ConversationLogger()
         self.content_safety_checker = ContentSafetyChecker()
         self.output_parser = OutputParserTool()
@@ -29,6 +28,7 @@ class OrchestratorBase(ABC):
     @abstractmethod
     async def orchestrate(
         self,
+        id: str,
         user_id: str,
         user_message: str,
         chat_history: List[dict],
@@ -69,6 +69,7 @@ class OrchestratorBase(ABC):
 
     async def handle_message(
         self,
+        id: str,
         user_id: str,
         user_message: str,
         chat_history: List[dict],
@@ -76,13 +77,14 @@ class OrchestratorBase(ABC):
         **kwargs: Optional[dict],
     ) -> dict:
         result = await self.orchestrate(
-            user_id, user_message, chat_history, conversation_id, **kwargs
+            id, user_id, user_message, chat_history, conversation_id, **kwargs
         )
+        print("RESULT", result)
         if self.config.logging.log_tokens:
             custom_dimensions = {
+                "id": id,
                 "user_id": user_id,
                 "conversation_id": conversation_id,
-                "message_id": self.message_id,
                 "prompt_tokens": self.tokens["prompt"],
                 "completion_tokens": self.tokens["completion"],
                 "total_tokens": self.tokens["total"],
@@ -92,6 +94,7 @@ class OrchestratorBase(ABC):
             self.conversation_logger.log(
                 messages=[
                     {
+                        "id": id,
                         "user_id": user_id,
                         "role": "user",
                         "content": user_message,

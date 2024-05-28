@@ -32,7 +32,9 @@ async def do_get_conversation_response(req: func.HttpRequest) -> func.HttpRespon
         if conversation_id == "" or not conversation_id:
             conversation_id = str(uuid.uuid4())
         user_id = req_body["user_id"]
-        print(f"User ID: {user_id}")
+        message_id = req_body["id"]
+        print("REQ_BODY", req_body)
+
         user_assistant_messages = list(
             filter(
                 lambda x: x["role"] in ("user", "assistant"), req_body["messages"][0:-1]
@@ -49,6 +51,7 @@ async def do_get_conversation_response(req: func.HttpRequest) -> func.HttpRespon
                 )
 
         messages = await message_orchestrator.handle_message(
+            id=message_id,
             user_id=user_id,
             user_message=user_message,
             chat_history=chat_history,
@@ -57,7 +60,7 @@ async def do_get_conversation_response(req: func.HttpRequest) -> func.HttpRespon
         )
 
         response_obj = {
-            "id": str(uuid.uuid4()),
+            "id": message_id,
             "model": env_helper.AZURE_OPENAI_MODEL,
             "created": "response.created",
             "object": "response.object",

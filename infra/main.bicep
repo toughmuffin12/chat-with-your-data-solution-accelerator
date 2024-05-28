@@ -198,6 +198,15 @@ param azureAISearchName string = 'srch-dev-accelerator-canadacentral-002'
 ])
 param azureSearchSku string = 'standard'
 
+@description('Azure Cosmos DB Account Name')
+param azureCosmosDBAccountName string = 'cosmos-dev-accelerator-canadacentral-001'
+
+@description('Azure Cosmos DB Database Name')
+param azureCosmosDBName string = 'db-dev-accelerator-canadacentral-001'
+
+@description('Azure Cosmos DB Container Name')
+param azureCosmosDBContainerName string = 'conversations'
+
 @description('Azure AI Search Index')
 param azureSearchIndex string = 'idx-dev-accelerator-canadacentral-001'
 
@@ -429,6 +438,7 @@ module storekeys './app/storekeys.bicep' = if (useKeyVault) {
     formRecognizerName: formrecognizer.outputs.name
     contentSafetyName: contentsafety.outputs.name
     speechServiceName: speechServiceName
+    cosmosDbAccountName: azureCosmosDBAccountName
     rgName: rgName
   }
 }
@@ -450,6 +460,18 @@ module search './core/search/search-services.bicep' = {
         aadAuthFailureMode: 'http403'
       }
     }
+  }
+}
+module cosmosdb './core/history/cosmos-db.bicep' = {
+  name: azureCosmosDBAccountName
+  scope: rg
+  params: {
+    accountName: azureCosmosDBAccountName
+    databaseName: azureCosmosDBName
+    containerName: azureCosmosDBContainerName
+    maxThroughput: 400
+    location: location
+    tags: tags
   }
 }
 
@@ -492,6 +514,7 @@ module web './app/web.bicep' = if (hostingModel == 'code') {
     searchKeyName: useKeyVault ? storekeys.outputs.SEARCH_KEY_NAME : ''
     contentSafetyKeyName: useKeyVault ? storekeys.outputs.CONTENT_SAFETY_KEY_NAME : ''
     speechKeyName: useKeyVault ? storekeys.outputs.SPEECH_KEY_NAME : ''
+    cosmosdbKeyName: useKeyVault ? storekeys.outputs.COSMOS_DB_KEY_NAME : ''
     useKeyVault: useKeyVault
     keyVaultName: useKeyVault || authType == 'rbac' ? keyvault.outputs.name : ''
     authType: authType
@@ -511,6 +534,9 @@ module web './app/web.bicep' = if (hostingModel == 'code') {
       AZURE_OPENAI_API_VERSION: azureOpenAIApiVersion
       AZURE_OPENAI_STREAM: azureOpenAIStream
       AZURE_OPENAI_EMBEDDING_MODEL: azureOpenAIEmbeddingModel
+      AZURE_COSMOS_DB_ACCOUNT_NAME: azureCosmosDBAccountName
+      AZURE_COSMOS_DB_DATABASE_NAME: azureCosmosDBName
+      AZURE_COSMOS_DB_CONTAINER_NAME: azureCosmosDBContainerName
       AZURE_SEARCH_USE_SEMANTIC_SEARCH: azureSearchUseSemanticSearch
       AZURE_SEARCH_SERVICE: 'https://${azureAISearchName}.search.windows.net'
       AZURE_SEARCH_INDEX: azureSearchIndex
@@ -768,6 +794,7 @@ module function './app/function.bicep' = if (hostingModel == 'code') {
     appServicePlanId: hostingplan.outputs.name
     applicationInsightsName: monitoring.outputs.applicationInsightsName
     azureOpenAIName: openai.outputs.name
+    cosmosDBAccountName: cosmosdb.outputs.accountName
     azureAISearchName: search.outputs.name
     storageAccountName: storage.outputs.name
     formRecognizerName: formrecognizer.outputs.name
@@ -777,6 +804,7 @@ module function './app/function.bicep' = if (hostingModel == 'code') {
     openAIKeyName: useKeyVault ? storekeys.outputs.OPENAI_KEY_NAME : ''
     storageAccountKeyName: useKeyVault ? storekeys.outputs.STORAGE_ACCOUNT_KEY_NAME : ''
     formRecognizerKeyName: useKeyVault ? storekeys.outputs.FORM_RECOGNIZER_KEY_NAME : ''
+    cosmosDBKeyName: useKeyVault ? storekeys.outputs.COSMOS_DB_KEY_NAME : ''
     searchKeyName: useKeyVault ? storekeys.outputs.SEARCH_KEY_NAME : ''
     contentSafetyKeyName: useKeyVault ? storekeys.outputs.CONTENT_SAFETY_KEY_NAME : ''
     speechKeyName: useKeyVault ? storekeys.outputs.SPEECH_KEY_NAME : ''
@@ -792,6 +820,9 @@ module function './app/function.bicep' = if (hostingModel == 'code') {
       AZURE_OPENAI_EMBEDDING_MODEL: azureOpenAIEmbeddingModel
       AZURE_OPENAI_RESOURCE: azureOpenAIResourceName
       AZURE_OPENAI_API_VERSION: azureOpenAIApiVersion
+      AZURE_COSMOS_DB_ACCOUNT_NAME: azureCosmosDBAccountName
+      AZURE_COSMOS_DB_NAME: azureCosmosDBName
+      AZURE_COSMOS_DB_CONTAINER_NAME: azureCosmosDBContainerName
       AZURE_SEARCH_INDEX: azureSearchIndex
       AZURE_SEARCH_SERVICE: 'https://${azureAISearchName}.search.windows.net'
       DOCUMENT_PROCESSING_QUEUE_NAME: queueName
@@ -927,6 +958,15 @@ module storageRoleUser 'core/security/role.bicep' = if (authType == 'rbac') {
   }
 }
 
+// module cosmosDBRoleUser 'core/security/role.bicep' = if (authType == 'rbac') {
+//   scope: rg
+//   name: 'cosmosdb-role-user'
+//   params: {
+//     principalId: principalId
+//     roleDefinitionId: '7f951dda-4ed3-4680-a7ca-43fe172d538d'
+//     principalType: 'User'
+//   }
+// }
 // Cognitive Services User
 module openaiRoleUser 'core/security/role.bicep' = if (authType == 'rbac') {
   scope: rg
@@ -988,6 +1028,10 @@ output AZURE_OPENAI_EMBEDDING_MODEL string = azureOpenAIEmbeddingModel
 output AZURE_OPENAI_MODEL string = azureOpenAIModel
 output AZURE_OPENAI_API_KEY string = useKeyVault ? storekeys.outputs.OPENAI_KEY_NAME : ''
 output AZURE_RESOURCE_GROUP string = rgName
+output AZURE_COSMOS_DB_ACCOUNT_NAME string = azureCosmosDBAccountName
+output AZURE_COSMOS_DB_DATABASE_NAME string = azureCosmosDBName
+output AZURE_COSMOS_DB_CONTAINER_NAME string = azureCosmosDBContainerName
+output AZURE_COSMOS_DB_KEY string = useKeyVault ? storekeys.outputs.COSMOS_DB_KEY_NAME : ''
 output AZURE_SEARCH_KEY string = useKeyVault ? storekeys.outputs.SEARCH_KEY_NAME : ''
 output AZURE_SEARCH_SERVICE string = search.outputs.endpoint
 output AZURE_SEARCH_USE_SEMANTIC_SEARCH string = azureSearchUseSemanticSearch

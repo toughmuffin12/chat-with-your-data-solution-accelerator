@@ -52,6 +52,7 @@ class OpenAIFunctionsOrchestrator(OrchestratorBase):
 
     async def orchestrate(
         self,
+        id: str,
         user_id: str,
         user_message: str,
         chat_history: List[dict],
@@ -76,6 +77,7 @@ class OpenAIFunctionsOrchestrator(OrchestratorBase):
         for message in chat_history:
             messages.append(
                 {
+                    "id": id,
                     "user_id": user_id,
                     "conversation_id": conversation_id,
                     "role": message["role"],

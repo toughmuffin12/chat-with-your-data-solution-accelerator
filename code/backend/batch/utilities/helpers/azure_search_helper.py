@@ -197,6 +197,7 @@ class AzureSearchHelper:
                 type=SearchFieldDataType.String,
                 key=True,
                 filterable=True,
+                searchable=True,
             ),
             SimpleField(
                 name="conversation_id",
@@ -208,13 +209,13 @@ class AzureSearchHelper:
                 name="content",
                 type=SearchFieldDataType.String,
             ),
-            SearchField(
-                name="content_vector",
-                type=SearchFieldDataType.Collection(SearchFieldDataType.Single),
-                searchable=True,
-                vector_search_dimensions=self.search_dimensions,
-                vector_search_profile_name="myHnswProfile",
-            ),
+            # SearchField(
+            #     name="content_vector",
+            #     type=SearchFieldDataType.Collection(SearchFieldDataType.Single),
+            #     searchable=True,
+            #     vector_search_dimensions=self.search_dimensions,
+            #     vector_search_profile_name="myHnswProfile",
+            # ),
             SearchableField(
                 name="metadata",
                 type=SearchFieldDataType.String,
