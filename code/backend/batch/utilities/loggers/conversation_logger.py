@@ -57,6 +57,7 @@ class ConversationLogger:
             metadata["user_id"] = None
         for message in messages:
             if message["role"] == "assistant":
+
                 metadata["id"] = message["id"]
                 metadata["type"] = message["role"]
                 metadata["created_at"] = datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ")
@@ -74,7 +75,6 @@ class ConversationLogger:
                     source["id"]
                     for source in json.loads(message["content"]).get("citations", [])
                 ]
-                # print("TOOL conv_ID", conversation_id)
                 self.logger.create_message(
                     uuid=message["id"],
                     conversation_id=metadata["conversation_id"],

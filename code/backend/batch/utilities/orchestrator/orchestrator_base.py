@@ -33,6 +33,7 @@ class OrchestratorBase(ABC):
         user_message: str,
         chat_history: List[dict],
         conversation_id: str,
+        # feedback: Optional[dict],
         **kwargs: dict,
     ) -> list[dict]:
         pass
@@ -74,12 +75,23 @@ class OrchestratorBase(ABC):
         user_message: str,
         chat_history: List[dict],
         conversation_id: str,
+        # feedback: Optional[dict],
         **kwargs: Optional[dict],
     ) -> dict:
+        # if feedback:
+        #     cosmos_client = CosmosConversationClient()
+
+        #     cosmos_client.update_message_feedback(
+        #         user_id=user_id,
+        #         message_id=id,
+        #         feedback=feedback
+        #     )
+        #     return
+
         result = await self.orchestrate(
             id, user_id, user_message, chat_history, conversation_id, **kwargs
         )
-        print("RESULT", result)
+
         if self.config.logging.log_tokens:
             custom_dimensions = {
                 "id": id,

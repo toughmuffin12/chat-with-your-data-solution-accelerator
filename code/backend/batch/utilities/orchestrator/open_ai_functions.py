@@ -57,6 +57,7 @@ class OpenAIFunctionsOrchestrator(OrchestratorBase):
         user_message: str,
         chat_history: List[dict],
         conversation_id: str,
+        # feedback: Optional[dict],
         **kwargs: dict,
     ) -> list[dict]:
         # Call Content Safety tool
@@ -74,12 +75,14 @@ class OpenAIFunctionsOrchestrator(OrchestratorBase):
         """
         # Create conversation history
         messages = [{"role": "system", "content": system_message}]
+
         for message in chat_history:
             messages.append(
                 {
                     "id": id,
                     "user_id": user_id,
                     "conversation_id": conversation_id,
+                    # "feedback" : feedback,
                     "role": message["role"],
                     "content": message["content"],
                 }
