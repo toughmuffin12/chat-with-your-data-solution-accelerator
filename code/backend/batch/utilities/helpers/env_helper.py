@@ -38,12 +38,9 @@ class EnvHelper:
         self.AZURE_COSMOS_DB_ACCOUNT_NAME = os.getenv(
             "AZURE_COSMOS_DB_ACCOUNT_NAME", ""
         )
-        self.AZURE_COSMOS_DB_DATABASE_NAME = "db-dev-accelerator-canadacentral-001"
-        # print("os.getenv(AZURE_COSMOS_DB_DATABASE_NAME)", os.getenv("AZURE_COSMOS_DB_DATABASE_NAME"))
-        # print("self.secretHelper.get_secret(AZURE_COSMOS_DB_KEY)", self.secretHelper.get_secret("AZURE_COSMOS_DB_KEY"))
-        # print("os.getenv(AZURE_COSMOS_DB_DATABASE_NAME)", os.getenv("AZURE_COSMOS_DB_DATABASE_NAME"))
-        # print("os.getenv(AZURE_COSMOS_DB_CONTAINER_NAME)", os.getenv("AZURE_COSMOS_DB_CONTAINER_NAME"))
-        # print("os.getenv(AZURE_COSMOS_DB_ACCOUNT_NAME)", os.getenv("AZURE_COSMOS_DB_ACCOUNT_NAME"))
+
+        self.AZURE_COSMOS_DB_NAME = os.getenv("AZURE_COSMOS_DB_NAME", "")
+
         self.AZURE_COSMOS_DB_CONTAINER_NAME = os.getenv(
             "AZURE_COSMOS_DB_CONTAINER_NAME", ""
         )
@@ -155,7 +152,9 @@ class EnvHelper:
             self.AZURE_COMPUTER_VISION_KEY = None
         else:
             self.AZURE_SEARCH_KEY = self.secretHelper.get_secret("AZURE_SEARCH_KEY")
-
+            self.AZURE_COSMOS_DB_ACCOUNT_KEY = self.secretHelper.get_secret(
+                "AZURE_COSMOSDB_ACCOUNT_KEY"
+            )
             self.AZURE_OPENAI_API_KEY = self.secretHelper.get_secret(
                 "AZURE_OPENAI_API_KEY"
             )
@@ -314,6 +313,7 @@ class SecretHelper:
             None
 
         """
+        print("SECRET_NAME", secret_name)
         return (
             self.secret_client.get_secret(os.getenv(secret_name, "")).value
             if self.USE_KEY_VAULT

@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.27.1.19265",
-      "templateHash": "816514027039156960"
+      "templateHash": "12794905130105038798"
     }
   },
   "parameters": {
@@ -1453,7 +1453,7 @@
             "value": "[parameters('speechServiceName')]"
           },
           "cosmosDbAccountName": {
-            "value": "[parameters('azureCosmosDBAccountName')]"
+            "value": "[reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, variables('rgName')), 'Microsoft.Resources/deployments', parameters('azureCosmosDBAccountName')), '2022-09-01').outputs.accountName.value]"
           },
           "rgName": {
             "value": "[variables('rgName')]"
@@ -1466,7 +1466,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.27.1.19265",
-              "templateHash": "1160429490569848455"
+              "templateHash": "14340952921109184680"
             }
           },
           "parameters": {
@@ -1589,7 +1589,7 @@
               "apiVersion": "2022-07-01",
               "name": "[format('{0}/{1}', parameters('keyVaultName'), parameters('cosmosDbKeyName'))]",
               "properties": {
-                "value": "[listKeys(resourceId(subscription().subscriptionId, parameters('rgName'), 'Microsoft.DocumentDB/databaseAccounts', parameters('cosmosDbAccountName')), '2021-04-15').primaryMasterKey]"
+                "value": "[listKeys(resourceId(subscription().subscriptionId, parameters('rgName'), 'Microsoft.DocumentDB/databaseAccounts', parameters('cosmosDbAccountName')), '2023-05-01').primaryMasterKey]"
               }
             }
           ],
@@ -1618,7 +1618,7 @@
               "type": "string",
               "value": "[parameters('speechKeyName')]"
             },
-            "COSMOS_DB_KEY_NAME": {
+            "COSMOS_DB_KEY": {
               "type": "string",
               "value": "[parameters('cosmosDbKeyName')]"
             }
@@ -1627,6 +1627,7 @@
       },
       "dependsOn": [
         "[extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, variables('rgName')), 'Microsoft.Resources/deployments', parameters('contentSafetyName'))]",
+        "[extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, variables('rgName')), 'Microsoft.Resources/deployments', parameters('azureCosmosDBAccountName'))]",
         "[extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, variables('rgName')), 'Microsoft.Resources/deployments', parameters('formRecognizerName'))]",
         "[extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, variables('rgName')), 'Microsoft.Resources/deployments', parameters('azureOpenAIResourceName'))]",
         "[subscriptionResourceId('Microsoft.Resources/resourceGroups', variables('rgName'))]",
@@ -1843,7 +1844,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.27.1.19265",
-              "templateHash": "2531144154794331427"
+              "templateHash": "13106041141171657054"
             }
           },
           "parameters": {
@@ -1909,7 +1910,7 @@
             {
               "type": "Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers",
               "apiVersion": "2021-04-15",
-              "name": "[format('{0}/{1}', format('{0}/{1}', parameters('accountName'), parameters('databaseName')), parameters('containerName'))]",
+              "name": "[format('{0}/{1}/{2}', parameters('accountName'), parameters('databaseName'), parameters('containerName'))]",
               "properties": {
                 "resource": {
                   "id": "[parameters('containerName')]",
@@ -1925,7 +1926,7 @@
                 }
               },
               "dependsOn": [
-                "[resourceId('Microsoft.DocumentDB/databaseAccounts/sqlDatabases', split(format('{0}/{1}', parameters('accountName'), parameters('databaseName')), '/')[0], split(format('{0}/{1}', parameters('accountName'), parameters('databaseName')), '/')[1])]"
+                "[resourceId('Microsoft.DocumentDB/databaseAccounts/sqlDatabases', parameters('accountName'), parameters('databaseName'))]"
               ]
             }
           ],
@@ -1936,11 +1937,11 @@
             },
             "databaseName": {
               "type": "string",
-              "value": "[format('{0}/{1}', parameters('accountName'), parameters('databaseName'))]"
+              "value": "[parameters('databaseName')]"
             },
             "containerName": {
               "type": "string",
-              "value": "[format('{0}/{1}', format('{0}/{1}', parameters('accountName'), parameters('databaseName')), parameters('containerName'))]"
+              "value": "[parameters('containerName')]"
             },
             "endpoint": {
               "type": "string",
@@ -2114,7 +2115,7 @@
           "searchKeyName": "[if(parameters('useKeyVault'), createObject('value', reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, variables('rgName')), 'Microsoft.Resources/deployments', 'storekeys'), '2022-09-01').outputs.SEARCH_KEY_NAME.value), createObject('value', ''))]",
           "contentSafetyKeyName": "[if(parameters('useKeyVault'), createObject('value', reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, variables('rgName')), 'Microsoft.Resources/deployments', 'storekeys'), '2022-09-01').outputs.CONTENT_SAFETY_KEY_NAME.value), createObject('value', ''))]",
           "speechKeyName": "[if(parameters('useKeyVault'), createObject('value', reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, variables('rgName')), 'Microsoft.Resources/deployments', 'storekeys'), '2022-09-01').outputs.SPEECH_KEY_NAME.value), createObject('value', ''))]",
-          "cosmosdbKeyName": "[if(parameters('useKeyVault'), createObject('value', reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, variables('rgName')), 'Microsoft.Resources/deployments', 'storekeys'), '2022-09-01').outputs.COSMOS_DB_KEY_NAME.value), createObject('value', ''))]",
+          "cosmosdbKeyName": "[if(parameters('useKeyVault'), createObject('value', reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, variables('rgName')), 'Microsoft.Resources/deployments', 'storekeys'), '2022-09-01').outputs.COSMOS_DB_KEY.value), createObject('value', ''))]",
           "useKeyVault": {
             "value": "[parameters('useKeyVault')]"
           },
@@ -7453,7 +7454,7 @@
           "openAIKeyName": "[if(parameters('useKeyVault'), createObject('value', reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, variables('rgName')), 'Microsoft.Resources/deployments', 'storekeys'), '2022-09-01').outputs.OPENAI_KEY_NAME.value), createObject('value', ''))]",
           "storageAccountKeyName": "[if(parameters('useKeyVault'), createObject('value', reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, variables('rgName')), 'Microsoft.Resources/deployments', 'storekeys'), '2022-09-01').outputs.STORAGE_ACCOUNT_KEY_NAME.value), createObject('value', ''))]",
           "formRecognizerKeyName": "[if(parameters('useKeyVault'), createObject('value', reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, variables('rgName')), 'Microsoft.Resources/deployments', 'storekeys'), '2022-09-01').outputs.FORM_RECOGNIZER_KEY_NAME.value), createObject('value', ''))]",
-          "cosmosDBKeyName": "[if(parameters('useKeyVault'), createObject('value', reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, variables('rgName')), 'Microsoft.Resources/deployments', 'storekeys'), '2022-09-01').outputs.COSMOS_DB_KEY_NAME.value), createObject('value', ''))]",
+          "cosmosDBKeyName": "[if(parameters('useKeyVault'), createObject('value', reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, variables('rgName')), 'Microsoft.Resources/deployments', 'storekeys'), '2022-09-01').outputs.COSMOS_DB_KEY.value), createObject('value', ''))]",
           "searchKeyName": "[if(parameters('useKeyVault'), createObject('value', reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, variables('rgName')), 'Microsoft.Resources/deployments', 'storekeys'), '2022-09-01').outputs.SEARCH_KEY_NAME.value), createObject('value', ''))]",
           "contentSafetyKeyName": "[if(parameters('useKeyVault'), createObject('value', reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, variables('rgName')), 'Microsoft.Resources/deployments', 'storekeys'), '2022-09-01').outputs.CONTENT_SAFETY_KEY_NAME.value), createObject('value', ''))]",
           "speechKeyName": "[if(parameters('useKeyVault'), createObject('value', reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, variables('rgName')), 'Microsoft.Resources/deployments', 'storekeys'), '2022-09-01').outputs.SPEECH_KEY_NAME.value), createObject('value', ''))]",
@@ -10916,7 +10917,7 @@
     },
     "AZURE_COSMOS_DB_KEY": {
       "type": "string",
-      "value": "[if(parameters('useKeyVault'), reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, variables('rgName')), 'Microsoft.Resources/deployments', 'storekeys'), '2022-09-01').outputs.COSMOS_DB_KEY_NAME.value, '')]"
+      "value": "[if(parameters('useKeyVault'), reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, variables('rgName')), 'Microsoft.Resources/deployments', 'storekeys'), '2022-09-01').outputs.COSMOS_DB_KEY.value, '')]"
     },
     "AZURE_SEARCH_KEY": {
       "type": "string",

@@ -89,7 +89,7 @@ resource cosmosDbKeySecret 'Microsoft.KeyVault/vaults/secrets@2022-07-01' = {
   properties: {
     value: listKeys(
       resourceId(subscription().subscriptionId, rgName, 'Microsoft.DocumentDB/databaseAccounts', cosmosDbAccountName),
-      '2021-04-15'
+      '2023-05-01'
     ).primaryMasterKey
   }
 }
@@ -117,4 +117,4 @@ output SEARCH_KEY_NAME string = searchKeySecret.name
 output OPENAI_KEY_NAME string = openAIKeySecret.name
 output STORAGE_ACCOUNT_KEY_NAME string = storageAccountKeySecret.name
 output SPEECH_KEY_NAME string = speechKeySecret.name
-output COSMOS_DB_KEY_NAME string = cosmosDbKeySecret.name
+output COSMOS_DB_KEY string = cosmosDbKeySecret.name

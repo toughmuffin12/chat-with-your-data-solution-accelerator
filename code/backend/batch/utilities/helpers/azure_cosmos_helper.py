@@ -10,13 +10,13 @@ from azure.cosmos import CosmosClient
 class CosmosConversationClient:
     def __init__(self):
         self.env_helper = EnvHelper()
-        self.cosmos_credentials = ""
+        self.cosmos_credentials = self.env_helper.AZURE_COSMOS_DB_ACCOUNT_KEY
         # print("COSMOS_KEY", self.env_helper.AZURE_COSMOS_DB_KEY)
         self.cosmosdb_client = CosmosClient(
             self.env_helper.AZURE_COSMOS_DB_ENDPOINT, credential=self.cosmos_credentials
         )
         self.database_client = self.cosmosdb_client.get_database_client(
-            self.env_helper.AZURE_COSMOS_DB_DATABASE_NAME
+            self.env_helper.AZURE_COSMOS_DB_NAME
         )
         self.container_client = self.database_client.get_container_client(
             self.env_helper.AZURE_COSMOS_DB_CONTAINER_NAME

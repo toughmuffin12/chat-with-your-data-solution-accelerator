@@ -438,7 +438,7 @@ module storekeys './app/storekeys.bicep' = if (useKeyVault) {
     formRecognizerName: formrecognizer.outputs.name
     contentSafetyName: contentsafety.outputs.name
     speechServiceName: speechServiceName
-    cosmosDbAccountName: azureCosmosDBAccountName
+    cosmosDbAccountName: cosmosdb.outputs.accountName
     rgName: rgName
   }
 }
@@ -514,7 +514,7 @@ module web './app/web.bicep' = if (hostingModel == 'code') {
     searchKeyName: useKeyVault ? storekeys.outputs.SEARCH_KEY_NAME : ''
     contentSafetyKeyName: useKeyVault ? storekeys.outputs.CONTENT_SAFETY_KEY_NAME : ''
     speechKeyName: useKeyVault ? storekeys.outputs.SPEECH_KEY_NAME : ''
-    cosmosdbKeyName: useKeyVault ? storekeys.outputs.COSMOS_DB_KEY_NAME : ''
+    cosmosdbKeyName: useKeyVault ? storekeys.outputs.COSMOS_DB_KEY : ''
     useKeyVault: useKeyVault
     keyVaultName: useKeyVault || authType == 'rbac' ? keyvault.outputs.name : ''
     authType: authType
@@ -804,7 +804,7 @@ module function './app/function.bicep' = if (hostingModel == 'code') {
     openAIKeyName: useKeyVault ? storekeys.outputs.OPENAI_KEY_NAME : ''
     storageAccountKeyName: useKeyVault ? storekeys.outputs.STORAGE_ACCOUNT_KEY_NAME : ''
     formRecognizerKeyName: useKeyVault ? storekeys.outputs.FORM_RECOGNIZER_KEY_NAME : ''
-    cosmosDBKeyName: useKeyVault ? storekeys.outputs.COSMOS_DB_KEY_NAME : ''
+    cosmosDBKeyName: useKeyVault ? storekeys.outputs.COSMOS_DB_KEY : ''
     searchKeyName: useKeyVault ? storekeys.outputs.SEARCH_KEY_NAME : ''
     contentSafetyKeyName: useKeyVault ? storekeys.outputs.CONTENT_SAFETY_KEY_NAME : ''
     speechKeyName: useKeyVault ? storekeys.outputs.SPEECH_KEY_NAME : ''
@@ -1031,7 +1031,7 @@ output AZURE_RESOURCE_GROUP string = rgName
 output AZURE_COSMOS_DB_ACCOUNT_NAME string = azureCosmosDBAccountName
 output AZURE_COSMOS_DB_DATABASE_NAME string = azureCosmosDBName
 output AZURE_COSMOS_DB_CONTAINER_NAME string = azureCosmosDBContainerName
-output AZURE_COSMOS_DB_KEY string = useKeyVault ? storekeys.outputs.COSMOS_DB_KEY_NAME : ''
+output AZURE_COSMOS_DB_KEY string = useKeyVault ? storekeys.outputs.COSMOS_DB_KEY : ''
 output AZURE_SEARCH_KEY string = useKeyVault ? storekeys.outputs.SEARCH_KEY_NAME : ''
 output AZURE_SEARCH_SERVICE string = search.outputs.endpoint
 output AZURE_SEARCH_USE_SEMANTIC_SEARCH string = azureSearchUseSemanticSearch

@@ -40,7 +40,9 @@ async def do_get_conversation_response(req: func.HttpRequest) -> func.HttpRespon
                 lambda x: x["role"] in ("user", "assistant"), req_body["messages"][0:-1]
             )
         )
-
+        # print("OS.GETENV.AZURE_COSMOS_DB_DATABASE_NAME", env_helper.AZURE_COSMOS_DB_NAME)
+        # print("OS.GETENV.AZURE_COSMOS_DB_KEY", env_helper.AZURE_COSMOS_DB_KEY)
+        # print("ENVIROMENT", os.environ)
         # Message Feedback
         if feedback:
             cosmos_client = CosmosConversationClient()
