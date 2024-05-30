@@ -83,6 +83,7 @@ resource speechKeySecret 'Microsoft.KeyVault/vaults/secrets@2022-07-01' = {
   }
 }
 
+
 resource cosmosDbKeySecret 'Microsoft.KeyVault/vaults/secrets@2022-07-01' = {
   parent: keyVault
   name: cosmosDbKeyName
@@ -93,6 +94,20 @@ resource cosmosDbKeySecret 'Microsoft.KeyVault/vaults/secrets@2022-07-01' = {
     ).primaryMasterKey
   }
 }
+
+// resource computerVisionKeySecret 'Microsoft.KeyVault/vaults/secrets@2022-07-01' = if (computerVisionName != '') {
+//   parent: keyVault
+//   name: computerVisionKeyName
+//   properties: {
+//     value: computerVisionName != ''
+//       ? listKeys(
+//           resourceId(subscription().subscriptionId, rgName, 'Microsoft.CognitiveServices/accounts', computerVisionName),
+//           '2023-05-01'
+//         ).key1
+//       : ''
+//   }
+// }
+
 
 // resource computerVisionKeySecret 'Microsoft.KeyVault/vaults/secrets@2022-07-01' = if (computerVisionName != '') {
 //   parent: keyVault

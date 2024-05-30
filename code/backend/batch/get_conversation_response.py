@@ -35,6 +35,7 @@ async def do_get_conversation_response(req: func.HttpRequest) -> func.HttpRespon
         user_id = req_body["user_id"]
         message_id = req_body["id"]
         feedback = req_body.get("feedback", None)
+
         user_assistant_messages = list(
             filter(
                 lambda x: x["role"] in ("user", "assistant"), req_body["messages"][0:-1]
