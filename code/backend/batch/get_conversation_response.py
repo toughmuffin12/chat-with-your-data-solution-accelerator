@@ -7,6 +7,7 @@ import uuid
 from utilities.helpers.env_helper import EnvHelper
 from utilities.helpers.orchestrator_helper import Orchestrator
 from utilities.helpers.config.config_helper import ConfigHelper
+from utilities.helpers.azure_cosmos_helper import CosmosConversationClient
 
 
 bp_get_conversation_response = func.Blueprint()
@@ -32,12 +33,33 @@ async def do_get_conversation_response(req: func.HttpRequest) -> func.HttpRespon
         if conversation_id == "" or not conversation_id:
             conversation_id = str(uuid.uuid4())
         user_id = req_body["user_id"]
+        message_id = req_body["id"]
+        feedback = req_body.get("feedback", None)
 
         user_assistant_messages = list(
             filter(
                 lambda x: x["role"] in ("user", "assistant"), req_body["messages"][0:-1]
             )
         )
+        # print("OS.GETENV.AZURE_COSMOS_DB_DATABASE_NAME", env_helper.AZURE_COSMOS_DB_NAME)
+        # print("OS.GETENV.AZURE_COSMOS_DB_KEY", env_helper.AZURE_COSMOS_DB_KEY)
+        # print("ENVIROMENT", os.environ)
+        # Message Feedback
+        if feedback:
+            cosmos_client = CosmosConversationClient()
+            cosmos_client.update_message_feedback(
+                user_id=user_id, message_id=message_id, feedback=feedback
+            )
+            print("Feedback updated")
+            response_obj = {
+                "id": message_id,
+                "model": env_helper.AZURE_OPENAI_MODEL,
+                "created": "response.created",
+                "object": "response.object",
+                "choices": [],
+            }
+            return func.HttpResponse(json.dumps(response_obj), status_code=200)
+
         chat_history = []
         for i, k in enumerate(user_assistant_messages):
             if i % 2 == 0:
@@ -49,15 +71,20 @@ async def do_get_conversation_response(req: func.HttpRequest) -> func.HttpRespon
                 )
 
         messages = await message_orchestrator.handle_message(
+            id=message_id,
             user_id=user_id,
             user_message=user_message,
             chat_history=chat_history,
             conversation_id=conversation_id,
+            # feedback=feedback,
             orchestrator=ConfigHelper.get_active_config_or_default().orchestrator,
         )
-
+        if messages is not None:
+            response_id = messages[-1]["id"]
+        else:
+            response_id = None
         response_obj = {
-            "id": str(uuid.uuid4()),
+            "id": response_id,
             "model": env_helper.AZURE_OPENAI_MODEL,
             "created": "response.created",
             "object": "response.object",

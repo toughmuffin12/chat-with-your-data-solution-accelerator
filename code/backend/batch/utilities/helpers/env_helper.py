@@ -34,6 +34,22 @@ class EnvHelper:
         self.AZURE_SUBSCRIPTION_ID = os.getenv("AZURE_SUBSCRIPTION_ID", "")
         self.AZURE_RESOURCE_GROUP = os.getenv("AZURE_RESOURCE_GROUP", "")
 
+        # Azure Cosmos DB
+        self.AZURE_COSMOS_DB_ACCOUNT_NAME = os.getenv(
+            "AZURE_COSMOS_DB_ACCOUNT_NAME", ""
+        )
+
+        self.AZURE_COSMOS_DB_NAME = os.getenv("AZURE_COSMOS_DB_NAME", "")
+
+        self.AZURE_COSMOS_DB_CONTAINER_NAME = os.getenv(
+            "AZURE_COSMOS_DB_CONTAINER_NAME", ""
+        )
+
+        self.AZURE_COSMOS_DB_ENDPOINT = (
+            f"https://{self.AZURE_COSMOS_DB_ACCOUNT_NAME}.documents.azure.com:443/"
+        )
+        self.AZURE_COSMOS_DB_KEY = self.secretHelper.get_secret("AZURE_COSMOS_DB_KEY")
+
         # Azure Search
         self.AZURE_SEARCH_SERVICE = os.getenv("AZURE_SEARCH_SERVICE", "")
         self.AZURE_SEARCH_INDEX = os.getenv("AZURE_SEARCH_INDEX", "")
@@ -136,6 +152,9 @@ class EnvHelper:
             self.AZURE_COMPUTER_VISION_KEY = None
         else:
             self.AZURE_SEARCH_KEY = self.secretHelper.get_secret("AZURE_SEARCH_KEY")
+            self.AZURE_COSMOS_DB_ACCOUNT_KEY = self.secretHelper.get_secret(
+                "AZURE_COSMOSDB_ACCOUNT_KEY"
+            )
             self.AZURE_OPENAI_API_KEY = self.secretHelper.get_secret(
                 "AZURE_OPENAI_API_KEY"
             )
@@ -294,6 +313,7 @@ class SecretHelper:
             None
 
         """
+        print("SECRET_NAME", secret_name)
         return (
             self.secret_client.get_secret(os.getenv(secret_name, "")).value
             if self.USE_KEY_VAULT

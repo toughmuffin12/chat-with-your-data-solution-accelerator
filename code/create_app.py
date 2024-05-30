@@ -360,7 +360,9 @@ def create_app():
 
         try:
             user_message = request.json["messages"][-1]["content"]
+            # user_id = request.json["user_id"]
             conversation_id = request.json["conversation_id"]
+            print(f"Request: {request.json}")
             user_assistant_messages = list(
                 filter(
                     lambda x: x["role"] in ("user", "assistant"),
@@ -369,6 +371,7 @@ def create_app():
             )
 
             messages = await message_orchestrator.handle_message(
+                user_id="user_id",
                 user_message=user_message,
                 chat_history=user_assistant_messages,
                 conversation_id=conversation_id,

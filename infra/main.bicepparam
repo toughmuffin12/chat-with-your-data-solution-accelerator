@@ -41,7 +41,11 @@ param computerVisionLocation = readEnvironmentVariable('AZURE_COMPUTER_VISION_LO
 // service.
 // var azureAISearchEndpoint = 'https://srch-teams-accelerator-canadacentral-001.search.windows.net'
 // var searchServiceName = split(substring(azureAISearchEndpoint, 8, length(azureAISearchEndpoint) - 9), '.')[0]
-param azureAISearchName = 'srch-teams-accelerator-canadacentral-001'
+param azureAISearchName = 'srch-dev-accelerator-canadacentral-001'
+param azureSearchIndex = 'idx-dev-accelerator-canadacentral-001'
 
-param azureSearchIndex = 'idx-teams-accelerator-canadacentral-001'
-param azureOpenAIResourceName = 'oai-teams-accelerator-canadacentral-001'
+param azureOpenAIResourceName = 'oai-dev-accelerator-canadacentral-001'
+
+param azureCosmosDBAccountName = 'cosmos-dev-accelerator-canadacentral-001'
+param azureCosmosDBName = 'db-dev-accelerator-canadacentral-001'
+param azureCosmosDBContainerName = 'conversations'

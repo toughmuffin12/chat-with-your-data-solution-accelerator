@@ -10,6 +10,7 @@ param runtimeVersion string = '3.11'
 param keyVaultName string = ''
 param azureOpenAIName string = ''
 param azureAISearchName string = ''
+param azureCosmosDBName string = ''
 param storageAccountName string = ''
 param formRecognizerName string = ''
 param contentSafetyName string = ''
@@ -22,6 +23,7 @@ param openAIKeyName string = ''
 param storageAccountKeyName string = ''
 param formRecognizerKeyName string = ''
 param searchKeyName string = ''
+param cosmosdbKeyName string = ''
 param contentSafetyKeyName string = ''
 param speechKeyName string = ''
 param authType string
@@ -53,6 +55,17 @@ module web '../core/host/appservice.bicep' = {
             ),
             '2023-05-01'
           ).key1
+      AZURE_COSMOSDB_KEY: useKeyVault
+        ? cosmosdbKeyName
+        : listKeys(
+            resourceId(
+              subscription().subscriptionId,
+              resourceGroup().name,
+              'Microsoft.DocumentDB/databaseAccounts',
+              azureCosmosDBName
+            ),
+            '2021-03-01'
+          ).primaryMasterKey
       AZURE_SEARCH_KEY: useKeyVault
         ? searchKeyName
         : listAdminKeys(

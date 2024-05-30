@@ -6,6 +6,8 @@ param rgName string = ''
 param formRecognizerName string = ''
 param contentSafetyName string = ''
 param speechServiceName string = ''
+param cosmosDbAccountName string = ''
+
 @secure()
 param storageAccountKeyName string = 'AZURE-STORAGE-ACCOUNT-KEY'
 param openAIKeyName string = 'AZURE-OPENAI-API-KEY'
@@ -13,6 +15,7 @@ param searchKeyName string = 'AZURE-SEARCH-KEY'
 param formRecognizerKeyName string = 'AZURE-FORM-RECOGNIZER-KEY'
 param contentSafetyKeyName string = 'AZURE-CONTENT-SAFETY-KEY'
 param speechKeyName string = 'AZURE-SPEECH-KEY'
+param cosmosDbKeyName string = 'AZURE-COSMOS-DB-KEY'
 
 resource storageAccountKeySecret 'Microsoft.KeyVault/vaults/secrets@2022-07-01' = {
   parent: keyVault
@@ -80,6 +83,32 @@ resource speechKeySecret 'Microsoft.KeyVault/vaults/secrets@2022-07-01' = {
   }
 }
 
+
+resource cosmosDbKeySecret 'Microsoft.KeyVault/vaults/secrets@2022-07-01' = {
+  parent: keyVault
+  name: cosmosDbKeyName
+  properties: {
+    value: listKeys(
+      resourceId(subscription().subscriptionId, rgName, 'Microsoft.DocumentDB/databaseAccounts', cosmosDbAccountName),
+      '2023-05-01'
+    ).primaryMasterKey
+  }
+}
+
+// resource computerVisionKeySecret 'Microsoft.KeyVault/vaults/secrets@2022-07-01' = if (computerVisionName != '') {
+//   parent: keyVault
+//   name: computerVisionKeyName
+//   properties: {
+//     value: computerVisionName != ''
+//       ? listKeys(
+//           resourceId(subscription().subscriptionId, rgName, 'Microsoft.CognitiveServices/accounts', computerVisionName),
+//           '2023-05-01'
+//         ).key1
+//       : ''
+//   }
+// }
+
+
 // resource computerVisionKeySecret 'Microsoft.KeyVault/vaults/secrets@2022-07-01' = if (computerVisionName != '') {
 //   parent: keyVault
 //   name: computerVisionKeyName
@@ -103,3 +132,4 @@ output SEARCH_KEY_NAME string = searchKeySecret.name
 output OPENAI_KEY_NAME string = openAIKeySecret.name
 output STORAGE_ACCOUNT_KEY_NAME string = storageAccountKeySecret.name
 output SPEECH_KEY_NAME string = speechKeySecret.name
+output COSMOS_DB_KEY string = cosmosDbKeySecret.name

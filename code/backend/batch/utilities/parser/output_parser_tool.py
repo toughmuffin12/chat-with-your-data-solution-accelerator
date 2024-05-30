@@ -2,6 +2,7 @@ from typing import List
 import logging
 import re
 import json
+import uuid
 from .parser_base import ParserBase
 from ..common.source_document import SourceDocument
 
@@ -47,6 +48,7 @@ class OutputParserTool(ParserBase):
         # create return message object
         messages = [
             {
+                "id": str(uuid.uuid4()),
                 "role": "tool",
                 "content": {"citations": [], "intent": question},
                 "end_turn": False,
@@ -90,7 +92,14 @@ class OutputParserTool(ParserBase):
             )
         if messages[0]["content"]["citations"] == []:
             answer = re.sub(r"\[doc\d+\]", "", answer)
-        messages.append({"role": "assistant", "content": answer, "end_turn": True})
+        messages.append(
+            {
+                "id": str(uuid.uuid4()),
+                "role": "assistant",
+                "content": answer,
+                "end_turn": True,
+            }
+        )
         # everything in content needs to be stringified to work with Azure BYOD frontend
         messages[0]["content"] = json.dumps(messages[0]["content"])
         return messages

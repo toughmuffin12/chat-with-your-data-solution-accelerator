@@ -13,7 +13,7 @@ param oaiLocation string = 'eastus'
 param location string
 
 @description('Name of App Service plan')
-param hostingPlanName string = 'host-teams-accelerator-canadacentral-001'
+param hostingPlanName string = 'host-dev-accelerator-canadacentral-001'
 
 @description('The pricing tier for the App Service plan')
 @allowed([
@@ -45,16 +45,16 @@ param hostingPlanSku string = 'B3'
 param skuTier string = 'Basic'
 
 @description('Name of Web App')
-param websiteName string = 'as-teams-accelerator-canadacentral-001'
+param websiteName string = 'as-dev-accelerator-canadacentral-001'
 
 @description('Name of Admin Web App')
-param adminWebsiteName string = 'ADMIN-as-teams-accelerator-canadacentral-001'
+param adminWebsiteName string = 'ADMIN-as-dev-accelerator-canadacentral-001'
 
 @description('Name of Application Insights')
-param applicationInsightsName string = 'appi-teams-accelerator-canadacentral-001'
+param applicationInsightsName string = 'appi-dev-accelerator-canadacentral-001'
 
 @description('Name of the Workbook')
-param workbookDisplayName string = 'wb-teams-accelerator-canadacentral-001'
+param workbookDisplayName string = 'wb-dev-accelerator-canadacentral-001'
 
 @description('Use semantic search')
 param azureSearchUseSemanticSearch string = 'false'
@@ -93,7 +93,7 @@ param azureSearchUrlColumn string = 'url'
 param azureSearchUseIntegratedVectorization bool = false
 
 @description('Name of Azure OpenAI Resource')
-param azureOpenAIResourceName string = 'oai-teams-accelerator-canadacentral-001'
+param azureOpenAIResourceName string = 'oai-dev-accelerator-canadacentral-001'
 
 @description('Name of Azure OpenAI Resource SKU')
 param azureOpenAISkuName string = 'S0'
@@ -162,7 +162,7 @@ param azureOpenAIEmbeddingModelName string = 'text-embedding-ada-002'
 param azureOpenAIEmbeddingModelCapacity int = 30
 
 @description('Name of Computer Vision Resource (if useAdvancedImageProcessing=true)')
-param computerVisionName string = 'cv-teams-accelerator-canadacentral-001'
+param computerVisionName string = 'cv-dev-accelerator-canadacentral-001'
 
 @description('Name of Computer Vision Resource SKU (if useAdvancedImageProcessing=true)')
 @allowed([
@@ -186,7 +186,7 @@ param computerVisionSkuName string = 'S1'
 param computerVisionLocation string = useAdvancedImageProcessing ? location : ''
 
 @description('Azure AI Search Resource')
-param azureAISearchName string = 'srch-teams-accelerator-canadacentral-001'
+param azureAISearchName string = 'srch-dev-accelerator-canadacentral-002'
 
 @description('The SKU of the search service you want to create. E.g. free or standard')
 @allowed([
@@ -198,29 +198,38 @@ param azureAISearchName string = 'srch-teams-accelerator-canadacentral-001'
 ])
 param azureSearchSku string = 'standard'
 
+@description('Azure Cosmos DB Account Name')
+param azureCosmosDBAccountName string = 'cosmos-dev-accelerator-canadacentral-001'
+
+@description('Azure Cosmos DB Database Name')
+param azureCosmosDBName string = 'db-dev-accelerator-canadacentral-001'
+
+@description('Azure Cosmos DB Container Name')
+param azureCosmosDBContainerName string = 'conversations'
+
 @description('Azure AI Search Index')
-param azureSearchIndex string = 'idx-teams-accelerator-canadacentral-001'
+param azureSearchIndex string = 'idx-dev-accelerator-canadacentral-001'
 
 @description('Azure AI Search Conversation Log Index')
 param azureSearchConversationLogIndex string = 'conversations'
 
 @description('Name of Storage Account')
-param storageAccountName string = 'stteamsaccelerator'
+param storageAccountName string = 'stdevaccelerator'
 
 @description('Name of Function App for Batch document processing')
-param functionName string = 'func-teams-accelerator-canadacentral-001'
+param functionName string = 'func-dev-accelerator-canadacentral-001'
 
 @description('Azure Form Recognizer Name')
-param formRecognizerName string = 'di-teams-accelerator-canadacentral-001'
+param formRecognizerName string = 'di-dev-accelerator-canadacentral-001'
 
 @description('Azure Content Safety Name')
-param contentSafetyName string = 'cs-teams-accelerator-canadacentral-001'
+param contentSafetyName string = 'cs-dev-accelerator-canadacentral-001'
 
 @description('Azure Speech Service Name')
-param speechServiceName string = 'spch-teams-accelerator-canadacentral-001'
+param speechServiceName string = 'spch-dev-accelerator-canadacentral-001'
 
 @description('Log Analytics Name')
-param logAnalyticsName string = 'log-teams-accelerator-canadacentral-001'
+param logAnalyticsName string = 'log-dev-accelerator-canadacentral-001'
 
 param newGuidString string = newGuid()
 param searchTag string = 'chatwithyourdata-sa'
@@ -264,7 +273,7 @@ var clientKey = '${uniqueString(guid(subscription().id, deployment().name))}${ne
 var eventGridSystemTopicName = 'doc-processing'
 var tags = { 'azd-env-name': environmentName }
 var rgName = 'rg-${environmentName}'
-var keyVaultName = 'kv-teams-accelerator-001'
+var keyVaultName = 'kv-dev-accelerator-001'
 
 // Organize resources in a resource group
 resource rg 'Microsoft.Resources/resourceGroups@2021-04-01' = {
@@ -429,6 +438,7 @@ module storekeys './app/storekeys.bicep' = if (useKeyVault) {
     formRecognizerName: formrecognizer.outputs.name
     contentSafetyName: contentsafety.outputs.name
     speechServiceName: speechServiceName
+    cosmosDbAccountName: cosmosdb.outputs.accountName
     rgName: rgName
   }
 }
@@ -450,6 +460,18 @@ module search './core/search/search-services.bicep' = {
         aadAuthFailureMode: 'http403'
       }
     }
+  }
+}
+module cosmosdb './core/history/cosmos-db.bicep' = {
+  name: azureCosmosDBAccountName
+  scope: rg
+  params: {
+    accountName: azureCosmosDBAccountName
+    databaseName: azureCosmosDBName
+    containerName: azureCosmosDBContainerName
+    maxThroughput: 400
+    location: location
+    tags: tags
   }
 }
 
@@ -474,7 +496,7 @@ module web './app/web.bicep' = if (hostingModel == 'code') {
   params: {
     name: websiteName
     location: location
-    tags: union(tags, { 'azd-service-name': 'web' })
+    tags: union(tags, { 'azd-service-name': 'web-dev' })
     runtimeName: 'python'
     runtimeVersion: '3.11'
     appServicePlanId: hostingplan.outputs.name
@@ -492,6 +514,7 @@ module web './app/web.bicep' = if (hostingModel == 'code') {
     searchKeyName: useKeyVault ? storekeys.outputs.SEARCH_KEY_NAME : ''
     contentSafetyKeyName: useKeyVault ? storekeys.outputs.CONTENT_SAFETY_KEY_NAME : ''
     speechKeyName: useKeyVault ? storekeys.outputs.SPEECH_KEY_NAME : ''
+    cosmosdbKeyName: useKeyVault ? storekeys.outputs.COSMOS_DB_KEY : ''
     useKeyVault: useKeyVault
     keyVaultName: useKeyVault || authType == 'rbac' ? keyvault.outputs.name : ''
     authType: authType
@@ -511,6 +534,9 @@ module web './app/web.bicep' = if (hostingModel == 'code') {
       AZURE_OPENAI_API_VERSION: azureOpenAIApiVersion
       AZURE_OPENAI_STREAM: azureOpenAIStream
       AZURE_OPENAI_EMBEDDING_MODEL: azureOpenAIEmbeddingModel
+      AZURE_COSMOS_DB_ACCOUNT_NAME: azureCosmosDBAccountName
+      AZURE_COSMOS_DB_DATABASE_NAME: azureCosmosDBName
+      AZURE_COSMOS_DB_CONTAINER_NAME: azureCosmosDBContainerName
       AZURE_SEARCH_USE_SEMANTIC_SEARCH: azureSearchUseSemanticSearch
       AZURE_SEARCH_SERVICE: 'https://${azureAISearchName}.search.windows.net'
       AZURE_SEARCH_INDEX: azureSearchIndex
@@ -539,7 +565,7 @@ module web_docker './app/web.bicep' = if (hostingModel == 'container') {
   params: {
     name: '${websiteName}-docker'
     location: location
-    tags: union(tags, { 'azd-service-name': 'web-docker' })
+    tags: union(tags, { 'azd-service-name': 'web-docker-dev' })
     dockerFullImageName: 'fruoccopublic.azurecr.io/rag-webapp'
     appServicePlanId: hostingplan.outputs.name
     applicationInsightsName: monitoring.outputs.applicationInsightsName
@@ -603,7 +629,7 @@ module adminweb './app/adminweb.bicep' = if (hostingModel == 'code') {
   params: {
     name: adminWebsiteName
     location: location
-    tags: union(tags, { 'azd-service-name': 'adminweb' })
+    tags: union(tags, { 'azd-service-name': 'adminweb-dev' })
     runtimeName: 'python'
     runtimeVersion: '3.11'
     appServicePlanId: hostingplan.outputs.name
@@ -666,7 +692,7 @@ module adminweb_docker './app/adminweb.bicep' = if (hostingModel == 'container')
   params: {
     name: '${adminWebsiteName}-docker'
     location: location
-    tags: union(tags, { 'azd-service-name': 'adminweb-docker' })
+    tags: union(tags, { 'azd-service-name': 'adminweb-docker-dev' })
     dockerFullImageName: 'fruoccopublic.azurecr.io/rag-adminwebapp'
     appServicePlanId: hostingplan.outputs.name
     applicationInsightsName: monitoring.outputs.applicationInsightsName
@@ -762,12 +788,13 @@ module function './app/function.bicep' = if (hostingModel == 'code') {
   params: {
     name: functionName
     location: location
-    tags: union(tags, { 'azd-service-name': 'function' })
+    tags: union(tags, { 'azd-service-name': 'function-dev' })
     runtimeName: 'python'
     runtimeVersion: '3.11'
     appServicePlanId: hostingplan.outputs.name
     applicationInsightsName: monitoring.outputs.applicationInsightsName
     azureOpenAIName: openai.outputs.name
+    cosmosDBAccountName: cosmosdb.outputs.accountName
     azureAISearchName: search.outputs.name
     storageAccountName: storage.outputs.name
     formRecognizerName: formrecognizer.outputs.name
@@ -777,6 +804,7 @@ module function './app/function.bicep' = if (hostingModel == 'code') {
     openAIKeyName: useKeyVault ? storekeys.outputs.OPENAI_KEY_NAME : ''
     storageAccountKeyName: useKeyVault ? storekeys.outputs.STORAGE_ACCOUNT_KEY_NAME : ''
     formRecognizerKeyName: useKeyVault ? storekeys.outputs.FORM_RECOGNIZER_KEY_NAME : ''
+    cosmosDBKeyName: useKeyVault ? storekeys.outputs.COSMOS_DB_KEY : ''
     searchKeyName: useKeyVault ? storekeys.outputs.SEARCH_KEY_NAME : ''
     contentSafetyKeyName: useKeyVault ? storekeys.outputs.CONTENT_SAFETY_KEY_NAME : ''
     speechKeyName: useKeyVault ? storekeys.outputs.SPEECH_KEY_NAME : ''
@@ -792,6 +820,9 @@ module function './app/function.bicep' = if (hostingModel == 'code') {
       AZURE_OPENAI_EMBEDDING_MODEL: azureOpenAIEmbeddingModel
       AZURE_OPENAI_RESOURCE: azureOpenAIResourceName
       AZURE_OPENAI_API_VERSION: azureOpenAIApiVersion
+      AZURE_COSMOS_DB_ACCOUNT_NAME: azureCosmosDBAccountName
+      AZURE_COSMOS_DB_NAME: azureCosmosDBName
+      AZURE_COSMOS_DB_CONTAINER_NAME: azureCosmosDBContainerName
       AZURE_SEARCH_INDEX: azureSearchIndex
       AZURE_SEARCH_SERVICE: 'https://${azureAISearchName}.search.windows.net'
       DOCUMENT_PROCESSING_QUEUE_NAME: queueName
@@ -807,7 +838,7 @@ module function_docker './app/function.bicep' = if (hostingModel == 'container')
   params: {
     name: '${functionName}-docker'
     location: location
-    tags: union(tags, { 'azd-service-name': 'function-docker' })
+    tags: union(tags, { 'azd-service-name': 'function-docker-dev' })
     dockerFullImageName: 'fruoccopublic.azurecr.io/rag-backend'
     appServicePlanId: hostingplan.outputs.name
     applicationInsightsName: monitoring.outputs.applicationInsightsName
@@ -927,6 +958,15 @@ module storageRoleUser 'core/security/role.bicep' = if (authType == 'rbac') {
   }
 }
 
+// module cosmosDBRoleUser 'core/security/role.bicep' = if (authType == 'rbac') {
+//   scope: rg
+//   name: 'cosmosdb-role-user'
+//   params: {
+//     principalId: principalId
+//     roleDefinitionId: '7f951dda-4ed3-4680-a7ca-43fe172d538d'
+//     principalType: 'User'
+//   }
+// }
 // Cognitive Services User
 module openaiRoleUser 'core/security/role.bicep' = if (authType == 'rbac') {
   scope: rg
@@ -988,6 +1028,10 @@ output AZURE_OPENAI_EMBEDDING_MODEL string = azureOpenAIEmbeddingModel
 output AZURE_OPENAI_MODEL string = azureOpenAIModel
 output AZURE_OPENAI_API_KEY string = useKeyVault ? storekeys.outputs.OPENAI_KEY_NAME : ''
 output AZURE_RESOURCE_GROUP string = rgName
+output AZURE_COSMOS_DB_ACCOUNT_NAME string = azureCosmosDBAccountName
+output AZURE_COSMOS_DB_DATABASE_NAME string = azureCosmosDBName
+output AZURE_COSMOS_DB_CONTAINER_NAME string = azureCosmosDBContainerName
+output AZURE_COSMOS_DB_KEY string = useKeyVault ? storekeys.outputs.COSMOS_DB_KEY : ''
 output AZURE_SEARCH_KEY string = useKeyVault ? storekeys.outputs.SEARCH_KEY_NAME : ''
 output AZURE_SEARCH_SERVICE string = search.outputs.endpoint
 output AZURE_SEARCH_USE_SEMANTIC_SEARCH string = azureSearchUseSemanticSearch
