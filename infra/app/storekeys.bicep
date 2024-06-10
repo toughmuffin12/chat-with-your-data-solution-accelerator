@@ -89,7 +89,7 @@ resource cosmosDbKeySecret 'Microsoft.KeyVault/vaults/secrets@2022-07-01' = {
   properties: {
     value: listKeys(
       resourceId(subscription().subscriptionId, rgName, 'Microsoft.DocumentDB/databaseAccounts', cosmosDbAccountName),
-      '2023-04-15'
+      '2021-04-15'
     ).primaryMasterKey
   }
 }

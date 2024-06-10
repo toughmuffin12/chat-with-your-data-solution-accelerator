@@ -406,6 +406,8 @@ FodyWeavers.xsd
 .env
 .venv
 
+infra/
+
 temp/
 .azure
 

@@ -313,7 +313,6 @@ class SecretHelper:
             None
 
         """
-        print("SECRET_NAME", secret_name)
         return (
             self.secret_client.get_secret(os.getenv(secret_name, "")).value
             if self.USE_KEY_VAULT

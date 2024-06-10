@@ -1,7 +1,9 @@
 import os
 import azure.functions as func
+import requests
 import logging
 import json
+
 import uuid
 
 from utilities.helpers.env_helper import EnvHelper
@@ -41,16 +43,37 @@ async def do_get_conversation_response(req: func.HttpRequest) -> func.HttpRespon
                 lambda x: x["role"] in ("user", "assistant"), req_body["messages"][0:-1]
             )
         )
-        # print("OS.GETENV.AZURE_COSMOS_DB_DATABASE_NAME", env_helper.AZURE_COSMOS_DB_NAME)
-        # print("OS.GETENV.AZURE_COSMOS_DB_KEY", env_helper.AZURE_COSMOS_DB_KEY)
-        # print("ENVIROMENT", os.environ)
+
         # Message Feedback
         if feedback:
             cosmos_client = CosmosConversationClient()
             cosmos_client.update_message_feedback(
                 user_id=user_id, message_id=message_id, feedback=feedback
             )
-            print("Feedback updated")
+            try:
+                if feedback["positive/negative"] == "NegativeFeedback":
+                    if feedback["catagory"] == "Other":
+                        description_string = (
+                            f"{feedback['catagory']} - {feedback['text_input']}"
+                        )
+                    else:
+                        description_string = feedback["catagory"]
+                    jira_url = "https://automation.atlassian.com/pro/hooks/80b5ac1b40e7e9fb1656bb536aefadd80c1f178d"
+                    headers = {"Content-Type": "application/json"}
+                    body = {
+                        "data": {
+                            "project": "KX",
+                            "summary": "Negative Feedback Recieved",
+                            "description": description_string,
+                            "issuetype": "Task",
+                        }
+                    }
+                    requests.post(jira_url, headers=headers, json=body)
+                print("Feedback updated")
+            except requests.exceptions.HTTPError as err:
+                print(
+                    f"HTTP request failed with status {err.response.status_code}, reason: {err.response.text}"
+                )
             response_obj = {
                 "id": message_id,
                 "model": env_helper.AZURE_OPENAI_MODEL,
