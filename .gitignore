@@ -6,6 +6,8 @@
 # generated frontend files
 code/dist/
 
+infra/
+
 # User-specific files
 *.rsuser
 *.suo
