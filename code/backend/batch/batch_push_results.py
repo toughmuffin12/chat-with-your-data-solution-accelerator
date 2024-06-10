@@ -3,6 +3,7 @@ import logging
 import json
 from urllib.parse import urlparse
 import azure.functions as func
+import requests
 
 from utilities.helpers.azure_blob_storage_client import AzureBlobStorageClient
 from utilities.helpers.env_helper import EnvHelper
@@ -46,9 +47,28 @@ def batch_push_results(msg: func.QueueMessage) -> None:
 
 def _process_document_created_event(message_body) -> None:
     env_helper: EnvHelper = EnvHelper()
-
+    supported_file_types = ["pdf", "txt", "jpeg", "jpg", "png", "docx", "md", "html"]
     blob_client = AzureBlobStorageClient()
     file_name = _get_file_name_from_message(message_body)
+    file_extension = file_name.split(".")[-1]
+    if file_extension not in supported_file_types:
+        description_string = f"{file_name} was not processed as it is not a supported file type. \n Supported file types are: {supported_file_types}"
+        jira_url = "https://automation.atlassian.com/pro/hooks/80b5ac1b40e7e9fb1656bb536aefadd80c1f178d"
+        headers = {"Content-Type": "application/json"}
+        body = {
+            "data": {
+                "project": "KX",
+                "summary": "Unsupported File Type Uploaded",
+                "description": description_string,
+                "issuetype": "Task",
+            }
+        }
+        requests.post(jira_url, headers=headers, json=body)
+        print(
+            "{file_name} was not processed as {file_extension} is not a supported file exstenstion - A JIRA ticket has been created."
+        )
+        return
+
     file_sas = blob_client.get_blob_sas(file_name)
 
     embedder = EmbedderFactory.create(env_helper)

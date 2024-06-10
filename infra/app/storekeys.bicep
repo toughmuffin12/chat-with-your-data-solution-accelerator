@@ -83,14 +83,13 @@ resource speechKeySecret 'Microsoft.KeyVault/vaults/secrets@2022-07-01' = {
   }
 }
 
-
 resource cosmosDbKeySecret 'Microsoft.KeyVault/vaults/secrets@2022-07-01' = {
   parent: keyVault
   name: cosmosDbKeyName
   properties: {
     value: listKeys(
       resourceId(subscription().subscriptionId, rgName, 'Microsoft.DocumentDB/databaseAccounts', cosmosDbAccountName),
-      '2023-05-01'
+      '2021-04-15'
     ).primaryMasterKey
   }
 }
@@ -107,7 +106,6 @@ resource cosmosDbKeySecret 'Microsoft.KeyVault/vaults/secrets@2022-07-01' = {
 //       : ''
 //   }
 // }
-
 
 // resource computerVisionKeySecret 'Microsoft.KeyVault/vaults/secrets@2022-07-01' = if (computerVisionName != '') {
 //   parent: keyVault
