@@ -6,8 +6,6 @@
 # generated frontend files
 code/dist/
 
-infra/
-
 # User-specific files
 *.rsuser
 *.suo
@@ -407,6 +405,8 @@ FodyWeavers.xsd
 # Python
 .env
 .venv
+
+infra/
 
 temp/
 .azure
