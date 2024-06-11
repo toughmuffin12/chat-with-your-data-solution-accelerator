@@ -44,13 +44,13 @@ class AzureSearchHandler(SearchHandlerBase):
         for result in results:
             id = result["id"]
             filename = result["title"]
-            splink = result["splink"]
+            # splink = result["splink"]
             if filename in files:
                 files[filename].append(id)
             else:
                 files[filename] = [id]
-            if splink:
-                files[splink] = [splink]
+            # if splink:
+            #     files[splink] = [splink]
 
         return files
 
