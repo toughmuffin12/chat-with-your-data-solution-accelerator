@@ -37,13 +37,14 @@ class PushEmbedder(EmbedderBase):
             ext = processor.document_type.lower()
             self.embedding_configs[ext] = processor
 
-    def embed_file(self, source_url: str, file_name: str):
+    def embed_file(self, source_url: str, file_name: str, sharepoint_link: str = None):
         file_extension = file_name.split(".")[-1]
         embedding_config = self.embedding_configs.get(file_extension)
         self.__embed(
             source_url=source_url,
             file_extension=file_extension,
             embedding_config=embedding_config,
+            sharepoint_link=sharepoint_link,
         )
         if file_extension != "url":
             self.blob_client.upsert_blob_metadata(
@@ -51,7 +52,11 @@ class PushEmbedder(EmbedderBase):
             )
 
     def __embed(
-        self, source_url: str, file_extension: str, embedding_config: EmbeddingConfig
+        self,
+        source_url: str,
+        file_extension: str,
+        embedding_config: EmbeddingConfig,
+        sharepoint_link: str = None,
     ):
         documents_to_upload: List[SourceDocument] = []
         if (
@@ -79,7 +84,9 @@ class PushEmbedder(EmbedderBase):
             )
 
             for document in documents:
-                documents_to_upload.append(self.__convert_to_search_document(document))
+                documents_to_upload.append(
+                    self.__convert_to_search_document(document, sharepoint_link)
+                )
 
         response = self.azure_search_helper.get_search_client().upload_documents(
             documents_to_upload
@@ -114,7 +121,9 @@ If the image is mostly text, use OCR to extract the text as it is displayed in t
         caption = response.choices[0].message.content
         return caption
 
-    def __convert_to_search_document(self, document: SourceDocument):
+    def __convert_to_search_document(
+        self, document: SourceDocument, sharepoint_link: str = None
+    ):
         embedded_content = self.llm_helper.generate_embeddings(document.content)
         metadata = {
             "id": document.id,
@@ -122,6 +131,7 @@ If the image is mostly text, use OCR to extract the text as it is displayed in t
             "title": document.title,
             "chunk": document.chunk,
             "offset": document.offset,
+            "splink": sharepoint_link,
             "page_number": document.page_number,
             "chunk_id": document.chunk_id,
         }
@@ -132,6 +142,7 @@ If the image is mostly text, use OCR to extract the text as it is displayed in t
             "metadata": json.dumps(metadata),
             "title": document.title,
             "source": document.source,
+            "splink": sharepoint_link,
             "chunk": document.chunk,
             "offset": document.offset,
         }

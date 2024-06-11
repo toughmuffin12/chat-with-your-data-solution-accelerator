@@ -36,7 +36,7 @@ class AzureSearchHandler(SearchHandlerBase):
 
     def get_files(self):
         return self.search_client.search(
-            "*", select="id, title", include_total_count=True
+            "*", select="id, title, splink", include_total_count=True
         )
 
     def output_results(self, results):
@@ -44,10 +44,13 @@ class AzureSearchHandler(SearchHandlerBase):
         for result in results:
             id = result["id"]
             filename = result["title"]
+            splink = result["splink"]
             if filename in files:
                 files[filename].append(id)
             else:
                 files[filename] = [id]
+            if splink:
+                files[splink] = [splink]
 
         return files
 
@@ -117,6 +120,7 @@ class AzureSearchHandler(SearchHandlerBase):
                     source=source.get("source"),
                     chunk=source.get("chunk"),
                     offset=source.get("offset"),
+                    splink=source.get("splink"),
                     page_number=source.get("page_number"),
                 )
             )

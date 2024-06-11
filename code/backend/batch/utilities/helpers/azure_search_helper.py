@@ -109,6 +109,11 @@ class AzureSearchHelper:
                 type=SearchFieldDataType.String,
                 filterable=True,
             ),
+            SearchableField(
+                name="splink",
+                type=SearchFieldDataType.String,
+                filterable=True,
+            ),
             SimpleField(
                 name="chunk",
                 type=SearchFieldDataType.Int32,
