@@ -14,6 +14,7 @@ class SourceDocument:
         title: Optional[str] = None,
         chunk: Optional[int] = None,
         offset: Optional[int] = None,
+        splink: Optional[str] = None,
         page_number: Optional[int] = None,
         chunk_id: Optional[str] = None,
     ):
@@ -23,11 +24,12 @@ class SourceDocument:
         self.title = title
         self.chunk = chunk
         self.offset = offset
+        self.splink = splink
         self.page_number = page_number
         self.chunk_id = chunk_id
 
     def __str__(self):
-        return f"SourceDocument(id={self.id}, title={self.title}, source={self.source}, chunk={self.chunk}, offset={self.offset}, page_number={self.page_number}, chunk_id={self.chunk_id})"
+        return f"SourceDocument(id={self.id}, title={self.title}, source={self.source}, chunk={self.chunk}, offset={self.offset}, splink={self.splink}, page_number={self.page_number}, chunk_id={self.chunk_id})"
 
     def __eq__(self, other):
         if isinstance(self, other.__class__):
@@ -38,6 +40,7 @@ class SourceDocument:
                 and self.title == other.title
                 and self.chunk == other.chunk
                 and self.offset == other.offset
+                and self.splink == other.splink
                 and self.page_number == other.page_number
                 and self.chunk_id == other.chunk_id
             )
@@ -59,6 +62,7 @@ class SourceDocument:
             dict_obj["title"],
             dict_obj["chunk"],
             dict_obj["offset"],
+            dict_obj["splink"],
             dict_obj["page_number"],
             dict_obj["chunk_id"],
         )
@@ -89,6 +93,7 @@ class SourceDocument:
             title=metadata.get("title", filename),
             chunk=metadata.get("chunk", idx),
             offset=metadata.get("offset"),
+            splink=metadata.get("splink"),
             page_number=metadata.get("page_number"),
             chunk_id=metadata.get("chunk_id"),
         )
@@ -122,6 +127,7 @@ class SourceDocumentEncoder(json.JSONEncoder):
                 "title": obj.title,
                 "chunk": obj.chunk,
                 "offset": obj.offset,
+                "splink": obj.splink,
                 "page_number": obj.page_number,
                 "chunk_id": obj.chunk_id,
             }
@@ -138,6 +144,7 @@ class SourceDocumentDecoder(json.JSONDecoder):
             title=obj["title"],
             chunk=obj["chunk"],
             offset=obj["offset"],
+            splink=obj["splink"],
             page_number=obj["page_number"],
             chunk_id=obj["chunk_id"],
         )

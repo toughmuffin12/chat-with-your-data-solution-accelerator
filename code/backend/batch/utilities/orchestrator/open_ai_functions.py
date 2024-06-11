@@ -151,6 +151,7 @@ class OpenAIFunctionsOrchestrator(OrchestratorBase):
                 return response
 
         # Format the output for the UI
+
         messages = self.output_parser.parse(
             question=answer.question,
             answer=answer.answer,

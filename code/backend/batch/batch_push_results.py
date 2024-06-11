@@ -50,6 +50,7 @@ def _process_document_created_event(message_body) -> None:
     supported_file_types = ["pdf", "txt", "jpeg", "jpg", "png", "docx", "md", "html"]
     blob_client = AzureBlobStorageClient()
     file_name = _get_file_name_from_message(message_body)
+    sharepoint_link = message_body.get("splink", "")
     file_extension = file_name.split(".")[-1]
     if file_extension not in supported_file_types:
         description_string = f"{file_name} was not processed as it is not a supported file type. \n Supported file types are: {supported_file_types}"
@@ -72,7 +73,7 @@ def _process_document_created_event(message_body) -> None:
     file_sas = blob_client.get_blob_sas(file_name)
 
     embedder = EmbedderFactory.create(env_helper)
-    embedder.embed_file(file_sas, file_name)
+    embedder.embed_file(file_sas, file_name, sharepoint_link)
 
 
 def _process_document_deleted_event(message_body) -> None:

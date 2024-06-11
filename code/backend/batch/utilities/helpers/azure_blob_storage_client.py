@@ -196,6 +196,7 @@ class AzureBlobStorageClient:
                             if blob.metadata
                             else ""
                         ),
+                        "splink": blob.metadata.get("SPLink", ""),
                         "converted_path": "",
                     }
                 )

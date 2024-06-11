@@ -78,9 +78,11 @@ class OutputParserTool(ParserBase):
                     "title": doc.title,
                     "filepath": doc.get_filename(include_path=True),
                     "url": doc.get_markdown_url(),
+                    "sharepoint_link": doc.splink,
                     "metadata": {
                         "offset": doc.offset,
                         "source": doc.source,
+                        "sharepoint_link": doc.splink,
                         "markdown_url": doc.get_markdown_url(),
                         "title": doc.title,
                         "original_url": doc.source,  # TODO: do we need this?

@@ -25,8 +25,9 @@ def batch_start_processing(req: func.HttpRequest) -> func.HttpResponse:
     azure_blob_storage_client = AzureBlobStorageClient()
     # Get all files from Blob Storage
     files_data = azure_blob_storage_client.get_all_files()
-
-    files_data = list(map(lambda x: {"filename": x["filename"]}, files_data))
+    files_data = list(
+        map(lambda x: {"filename": x["filename"], "splink": x["splink"]}, files_data)
+    )
 
     if env_helper.AZURE_SEARCH_USE_INTEGRATED_VECTORIZATION:
         reprocess_integrated_vectorization(env_helper)
