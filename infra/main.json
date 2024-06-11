@@ -4,8 +4,8 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.27.1.19265",
-      "templateHash": "8517114044384172770"
+      "version": "0.28.1.47646",
+      "templateHash": "17776627645785308598"
     }
   },
   "parameters": {
@@ -1465,8 +1465,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.27.1.19265",
-              "templateHash": "4339112669444521916"
+              "version": "0.28.1.47646",
+              "templateHash": "10756062479534044491"
             }
           },
           "parameters": {
@@ -1589,7 +1589,7 @@
               "apiVersion": "2022-07-01",
               "name": "[format('{0}/{1}', parameters('keyVaultName'), parameters('cosmosDbKeyName'))]",
               "properties": {
-                "value": "[listKeys(resourceId(subscription().subscriptionId, parameters('rgName'), 'Microsoft.DocumentDB/databaseAccounts', parameters('cosmosDbAccountName')), '2023-04-15').primaryMasterKey]"
+                "value": "[listKeys(resourceId(subscription().subscriptionId, parameters('rgName'), 'Microsoft.DocumentDB/databaseAccounts', parameters('cosmosDbAccountName')), '2021-04-15').primaryMasterKey]"
               }
             }
           ],
