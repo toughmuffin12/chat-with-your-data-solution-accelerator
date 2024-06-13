@@ -46,11 +46,26 @@ def batch_push_results(msg: func.QueueMessage) -> None:
 
 
 def _process_document_created_event(message_body) -> None:
+    print("MESSAGE BODY", message_body)
     env_helper: EnvHelper = EnvHelper()
     supported_file_types = ["pdf", "txt", "jpeg", "jpg", "png", "docx", "md", "html"]
     blob_client = AzureBlobStorageClient()
     file_name = _get_file_name_from_message(message_body)
     sharepoint_link = message_body.get("splink", "")
+    if sharepoint_link == "":
+        # Get the blob container and blob name from the message body
+        blob_container = "documents"
+        blob_name = message_body["data"]["url"].split("/")[-1]
+
+        # Get the blob properties
+        blob_properties = blob_client.get_blob_properties(blob_container, blob_name)
+
+        # Get the metadata from the blob properties
+        metadata = blob_properties.metadata
+
+        # Get the SharePoint link from the metadata
+        sharepoint_link = metadata.get("SPLink", "")
+
     file_extension = file_name.split(".")[-1]
     if file_extension not in supported_file_types:
         description_string = f"{file_name} was not processed as it is not a supported file type. \n Supported file types are: {supported_file_types}"
