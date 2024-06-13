@@ -250,3 +250,19 @@ class AzureBlobStorageClient:
                 expiry=datetime.utcnow() + timedelta(hours=1),
             )
         )
+
+    def get_blob_properties(self, blob_container, blob_name):
+        """
+        Gets the properties of a blob.
+
+        Args:
+            blob_container (str): The name of the blob container.
+            blob_name (str): The name of the blob.
+
+        Returns:
+            BlobProperties: The properties of the blob.
+        """
+        blob_client = self.blob_service_client.get_blob_client(
+            container=blob_container, blob=blob_name
+        )
+        return blob_client.get_blob_properties()
