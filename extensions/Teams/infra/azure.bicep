@@ -75,16 +75,16 @@ resource webApp 'Microsoft.Web/sites@2021-02-01' = {
   }
 }
 
-// Register your web service as a bot with the Bot Framework
-module azureBotRegistration './botRegistration/azurebot.bicep' = {
-  name: 'Azure-Bot-registration'
-  params: {
-    resourceBaseName: resourceBaseName
-    botAadAppClientId: botAadAppClientId
-    botAppDomain: webApp.properties.defaultHostName
-    botDisplayName: botDisplayName
-  }
-}
+// // Register your web service as a bot with the Bot Framework
+// module azureBotRegistration './botRegistration/azurebot.bicep' = {
+//   name: 'Azure-Bot-registration'
+//   params: {
+//     resourceBaseName: resourceBaseName
+//     botAadAppClientId: botAadAppClientId
+//     botAppDomain: webApp.properties.defaultHostName
+//     botDisplayName: botDisplayName
+//   }
+// }
 
 // The output will be persisted in .env.{envName}. Visit https://aka.ms/teamsfx-actions/arm-deploy for more details.
 output BOT_AZURE_APP_SERVICE_RESOURCE_ID string = webApp.id

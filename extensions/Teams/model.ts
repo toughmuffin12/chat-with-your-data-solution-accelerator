@@ -1,4 +1,5 @@
 export type AskResponse = {
+    conversation_id: string;
     answer: string;
     citations: Citation[];
     error?: string;
@@ -10,6 +11,7 @@ export type Citation = {
     title: string | null;
     filepath: string | null;
     url: string | null;
+    sharepoint_link: string | null;
     metadata: string | null;
     chunk_id: string | null;
     reindex_id: string | null;

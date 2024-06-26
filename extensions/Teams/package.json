@@ -24,7 +24,8 @@
     },
     "dependencies": {
         "botbuilder": "^4.22.1",
-        "restify": "^10.0.0"
+        "restify": "^10.0.0",
+        "uuid": "^9.0.1"
     },
     "devDependencies": {
         "@types/node": "^18.19.31",

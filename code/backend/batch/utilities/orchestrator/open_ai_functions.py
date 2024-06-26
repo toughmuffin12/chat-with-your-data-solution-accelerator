@@ -61,7 +61,7 @@ class OpenAIFunctionsOrchestrator(OrchestratorBase):
         **kwargs: dict,
     ) -> list[dict]:
         # Call Content Safety tool
-        if self.config.prompts.enable_content_safety:
+        if self.config.prompts.enable_conten_safety:
             if response := self.call_content_safety_input(user_message):
                 return response
 
@@ -79,9 +79,9 @@ class OpenAIFunctionsOrchestrator(OrchestratorBase):
         for message in chat_history:
             messages.append(
                 {
-                    "id": id,
-                    "user_id": user_id,
-                    "conversation_id": conversation_id,
+                    # "id": id,
+                    # "user_id": user_id,
+                    # "conversation_id": conversation_id,
                     # "feedback" : feedback,
                     "role": message["role"],
                     "content": message["content"],
