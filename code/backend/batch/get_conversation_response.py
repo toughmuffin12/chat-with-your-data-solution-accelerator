@@ -3,6 +3,7 @@ import azure.functions as func
 import requests
 import logging
 import json
+import datetime
 
 import uuid
 
@@ -52,11 +53,9 @@ async def do_get_conversation_response(req: func.HttpRequest) -> func.HttpRespon
             try:
                 if feedback["positive/negative"] == "NegativeFeedback":
                     if feedback["catagory"] == "Other":
-                        description_string = (
-                            f"{feedback['catagory']} - {feedback['text_input']}"
-                        )
+                        description_string = f"{feedback['catagory']} - {feedback['text_input']}\nMessage Content: {req_body['messages'][-1]['content']}\nConversation ID: {conversation_id}\nTimestamp: {datetime.datetime.now()}"
                     else:
-                        description_string = feedback["catagory"]
+                        description_string = f"{feedback['catagory']}\nMessage Content: {req_body['messages'][-1]['content']}\nConversation ID: {conversation_id}\nTimestamp: {datetime.datetime.now()}"
                     jira_url = "https://automation.atlassian.com/pro/hooks/80b5ac1b40e7e9fb1656bb536aefadd80c1f178d"
                     headers = {"Content-Type": "application/json"}
                     body = {
