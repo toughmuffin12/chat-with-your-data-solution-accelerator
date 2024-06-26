@@ -5,7 +5,7 @@ metadata:
   template: chat-with-your-data-solution-accelerator@1.7.0
 
 services:
-  web:
+  web-dev:
     project: ./code
     language: py
     host: appservice
@@ -23,7 +23,7 @@ services:
           interactive: true
           continueOnError: false
 
-  adminweb:
+  adminweb-dev:
     project: ./code/backend
     language: py
     host: appservice
@@ -36,7 +36,7 @@ services:
           shell: sh
           run: poetry install; poetry export -o requirements.txt
 
-  function:
+  function-dev:
     project: ./code/backend/batch
     language: py
     host: function
