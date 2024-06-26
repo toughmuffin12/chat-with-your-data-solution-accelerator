@@ -61,7 +61,7 @@ class OpenAIFunctionsOrchestrator(OrchestratorBase):
         **kwargs: dict,
     ) -> list[dict]:
         # Call Content Safety tool
-        if self.config.prompts.enable_conten_safety:
+        if self.config.prompts.enable_content_safety:
             if response := self.call_content_safety_input(user_message):
                 return response
 
