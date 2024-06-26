@@ -427,6 +427,3 @@ tests/integration/ui/cypress/screenshots/
 
 #JetBrains IDE
 .idea/
-
-#Deployment files
-infra/

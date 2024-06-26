@@ -30,7 +30,6 @@ async def do_get_conversation_response(req: func.HttpRequest) -> func.HttpRespon
 
     try:
         req_body = req.get_json()
-        print("REQ BODY", req_body)
         user_message = req_body["messages"][-1]["content"]
         conversation_id = req_body["conversation_id"]
         if conversation_id == "" or not conversation_id:
@@ -38,11 +37,11 @@ async def do_get_conversation_response(req: func.HttpRequest) -> func.HttpRespon
         user_id = req_body["user_id"]
         message_id = req_body["id"]
         feedback = req_body.get("feedback", None)
-        print("REQ BODY[messages]", req_body)
+
         user_assistant_messages = list(
             filter(lambda x: x["role"] in ("user", "assistant"), req_body["messages"])
         )
-        print("USER ASSISTANT MESSAGES", user_assistant_messages)
+
         # Message Feedback
         if feedback:
             cosmos_client = CosmosConversationClient()
@@ -105,7 +104,6 @@ async def do_get_conversation_response(req: func.HttpRequest) -> func.HttpRespon
                         }
                     )  # Adjust roles as necessary
 
-        print("CHAT HISTORY", chat_history)
         messages = await message_orchestrator.handle_message(
             id=message_id,
             user_id=user_id,
@@ -115,7 +113,7 @@ async def do_get_conversation_response(req: func.HttpRequest) -> func.HttpRespon
             # feedback=feedback,
             orchestrator=ConfigHelper.get_active_config_or_default().orchestrator,
         )
-        print("CHAT HISTORY", chat_history)
+
         if messages is not None:
             response_id = messages[-1]["id"]
         else:
