@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.28.1.47646",
-      "templateHash": "4391431416900964611"
+      "templateHash": "7753175362803734211"
     }
   },
   "parameters": {
@@ -2074,7 +2074,7 @@
             "value": "[parameters('location')]"
           },
           "tags": {
-            "value": "[union(variables('tags'), createObject('azd-service-name', 'web'))]"
+            "value": "[union(variables('tags'), createObject('azd-service-name', 'web-dev'))]"
           },
           "runtimeName": {
             "value": "python"
@@ -2955,7 +2955,7 @@
             "value": "[parameters('location')]"
           },
           "tags": {
-            "value": "[union(variables('tags'), createObject('azd-service-name', 'web-docker'))]"
+            "value": "[union(variables('tags'), createObject('azd-service-name', 'web-dev-docker'))]"
           },
           "dockerFullImageName": {
             "value": "fruoccopublic.azurecr.io/rag-webapp"
@@ -3829,7 +3829,7 @@
             "value": "[parameters('location')]"
           },
           "tags": {
-            "value": "[union(variables('tags'), createObject('azd-service-name', 'adminweb'))]"
+            "value": "[union(variables('tags'), createObject('azd-service-name', 'adminweb-dev'))]"
           },
           "runtimeName": {
             "value": "python"
@@ -4756,7 +4756,7 @@
             "value": "[parameters('location')]"
           },
           "tags": {
-            "value": "[union(variables('tags'), createObject('azd-service-name', 'adminweb-docker'))]"
+            "value": "[union(variables('tags'), createObject('azd-service-name', 'adminweb-dev-docker'))]"
           },
           "dockerFullImageName": {
             "value": "fruoccopublic.azurecr.io/rag-adminwebapp"
@@ -7413,7 +7413,7 @@
             "value": "[parameters('location')]"
           },
           "tags": {
-            "value": "[union(variables('tags'), createObject('azd-service-name', 'function'))]"
+            "value": "[union(variables('tags'), createObject('azd-service-name', 'function-dev'))]"
           },
           "runtimeName": {
             "value": "python"
