@@ -88,10 +88,22 @@ class OpenAIFunctionsOrchestrator(OrchestratorBase):
                 }
             )
         messages.append({"role": "user", "content": user_message})
-
-        result = llm_helper.get_chat_completion_with_functions(
-            messages, self.functions, function_call="auto"
-        )
+        try:
+            result = llm_helper.get_chat_completion_with_functions(
+                messages, self.functions, function_call="auto"
+            )
+        except Exception as e:
+            logger.error(f"Error in OpenAI function call: {e}")
+            result = {
+                "choices": [
+                    {
+                        "message": {
+                            "role": "system",
+                            "content": "The bot encountered an error. Please try again. If the error persists, contact support: {e}",
+                        }
+                    }
+                ]
+            }
         self.log_tokens(
             prompt_tokens=result.usage.prompt_tokens,
             completion_tokens=result.usage.completion_tokens,

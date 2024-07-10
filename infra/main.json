@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.28.1.47646",
-      "templateHash": "6364618677939991074"
+      "templateHash": "9067247050125992906"
     }
   },
   "parameters": {
@@ -270,7 +270,7 @@
     },
     "azureOpenAITemperature": {
       "type": "string",
-      "defaultValue": "0.2",
+      "defaultValue": "0",
       "metadata": {
         "description": "Azure OpenAI Temperature"
       }

@@ -132,7 +132,7 @@ param azureOpenAIVisionModelCapacity int = 10
 param orchestrationStrategy string = 'openai_function'
 
 @description('Azure OpenAI Temperature')
-param azureOpenAITemperature string = '0.2'
+param azureOpenAITemperature string = '0'
 
 @description('Azure OpenAI Top P')
 param azureOpenAITopP string = '1'
